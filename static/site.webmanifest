@@ -1,6 +1,6 @@
 {
-    "name": "Voi Fountain",
-    "short_name": "Voi Fountain",
+    "name": "Voi Ecosystem Hub",
+    "short_name": "Voi Ecosystem",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -19,8 +19,8 @@
             "purpose": "maskable"
         }
     ],
-    "theme_color": "#7C3AED",
-    "background_color": "#1F2937",
+    "theme_color": "#2C037A",
+    "background_color": "#f8f9fe",
     "display": "standalone",
     "start_url": "/",
     "orientation": "portrait"

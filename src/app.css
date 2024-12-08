@@ -9,14 +9,18 @@
 @layer base {
     :root {
         /* Brand Colors */
-        --brand: #6366f1;
-        --brand-light: #818cf8;
-        --brand-dark: #4f46e5;
+        --voi-dark: #2C037A;
+        --voi-light: #672ED9;
 
         /* Surface Colors */
-        --surface-1: #ffffff;
-        --surface-2: #f3f4f6;
-        --surface-3: #e5e7eb;
+        --bg-light: #ffffff;
+        --bg-alt: #f8f9fe;
+        --bg-dark: #000000;
+
+        /* Border Radius */
+        --radius-sm: 2px;
+        --radius-md: 4px;
+        --radius-lg: 8px;
 
         /* Text Colors */
         --text-1: #111827;
@@ -35,9 +39,9 @@
 
     .dark {
         /* Surface Colors */
-        --surface-1: #111827;
-        --surface-2: #1f2937;
-        --surface-3: #374151;
+        --bg-light: #000000;
+        --bg-alt: #111827;
+        --bg-dark: #1f2937;
 
         /* Text Colors */
         --text-1: #f9fafb;
@@ -47,15 +51,17 @@
         /* Border Colors */
         --border: #374151;
         --border-hover: #4b5563;
-
-        /* Brand Colors - Adjusted for dark mode */
-        --brand: #818cf8;
-        --brand-light: #a5b4fc;
-        --brand-dark: #6366f1;
     }
 
     html {
         @apply antialiased;
+        font-family: "Space Mono", monospace;
+        line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: "Chakra Petch", sans-serif;
+        line-height: 1.2;
     }
     
     /* Smooth dark mode transitions */
@@ -75,5 +81,26 @@
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Section */
+.section {
+    padding: 8rem 2rem;
+    background: var(--bg-light);
+    position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section {
+        padding: 4rem 1.5rem;
     }
 }
