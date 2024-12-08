@@ -1,0 +1,79 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* Brand Colors */
+        --brand: #6366f1;
+        --brand-light: #818cf8;
+        --brand-dark: #4f46e5;
+
+        /* Surface Colors */
+        --surface-1: #ffffff;
+        --surface-2: #f3f4f6;
+        --surface-3: #e5e7eb;
+
+        /* Text Colors */
+        --text-1: #111827;
+        --text-2: #4b5563;
+        --text-3: #9ca3af;
+
+        /* Border Colors */
+        --border: #e5e7eb;
+        --border-hover: #d1d5db;
+
+        /* Status Colors */
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+    }
+
+    .dark {
+        /* Surface Colors */
+        --surface-1: #111827;
+        --surface-2: #1f2937;
+        --surface-3: #374151;
+
+        /* Text Colors */
+        --text-1: #f9fafb;
+        --text-2: #e5e7eb;
+        --text-3: #9ca3af;
+
+        /* Border Colors */
+        --border: #374151;
+        --border-hover: #4b5563;
+
+        /* Brand Colors - Adjusted for dark mode */
+        --brand: #818cf8;
+        --brand-light: #a5b4fc;
+        --brand-dark: #6366f1;
+    }
+
+    html {
+        @apply antialiased;
+    }
+    
+    /* Smooth dark mode transitions */
+    *, *::before, *::after {
+        @apply transition-colors duration-200;
+    }
+}
+
+/* Animation utilities */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
