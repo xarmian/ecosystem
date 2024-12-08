@@ -20,6 +20,30 @@
 	const tileSize = 28; // Size of the orbital tiles (w-28)
 
 	const sections: Sections = {
+		gettingStarted: {
+			title: 'Quick Start',
+			description: 'Begin your Voi journey',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3L3 9V21H9V15H15V21H21V9L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				users: { title: 'For Users', description: 'Getting Setup' },
+				developers: { title: 'For Developers', description: 'Start Building' }
+			}
+		},
+		about: {
+			title: 'About',
+			description: 'Vision & Strategy',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8v4m0 4h.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				vision: { title: 'Vision', description: 'Our mission and goals' },
+				tokenomics: { title: 'Tokenomics', description: 'Token distribution and utility' },
+				roadmap: { title: 'Roadmap', description: 'Development timeline' }
+			}
+		},
 		projects: {
 			title: 'Projects',
 			description: 'Explore the ecosystem',
@@ -93,30 +117,6 @@
 				developerDocs: { title: 'Developer Docs', description: 'Documentation & Guides' },
 				analytics: { title: 'Analytics', description: 'Network Stats' }
 			}
-		},
-		gettingStarted: {
-			title: 'Quick Start',
-			description: 'Begin your Voi journey',
-			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 3L3 9V21H9V15H15V21H21V9L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>`,
-			subSections: {
-				users: { title: 'For Users', description: 'Getting Setup' },
-				developers: { title: 'For Developers', description: 'Start Building' }
-			}
-		},
-		about: {
-			title: 'About',
-			description: 'Vision & Strategy',
-			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 8v4m0 4h.01" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>`,
-			subSections: {
-				vision: { title: 'Vision', description: 'Our mission and goals' },
-				tokenomics: { title: 'Tokenomics', description: 'Token distribution and utility' },
-				roadmap: { title: 'Roadmap', description: 'Development timeline' }
-			}
 		}
 	};
 
@@ -136,13 +136,16 @@
 
 	function calculateLineCoordinates(index: number) {
 		const totalSections = Object.keys(sections).length;
-		const angle = index * (360 / totalSections) * (Math.PI / 180);
-
+		const angle = (index * (360 / totalSections) - 90) * (Math.PI / 180);
+		
+		// Start from the edge of the hub
 		const x1 = Math.cos(angle) * hubRadius;
 		const y1 = Math.sin(angle) * hubRadius;
 
-		const x2 = Math.cos(angle) * (spokeLength - tileSize);
-		const y2 = Math.sin(angle) * (spokeLength - tileSize);
+		// End at the inner edge of the tile (28px is the tile size)
+		const tileOffset = tileSize / 2; // Half the tile size
+		const x2 = Math.cos(angle) * (spokeLength - tileOffset);
+		const y2 = Math.sin(angle) * (spokeLength - tileOffset);
 
 		return { x1, y1, x2, y2 };
 	}
@@ -162,78 +165,74 @@
 	}
 </script>
 
-<!-- Top Navigation -->
-<nav class="absolute left-0 right-0 top-0 z-50 p-4">
-	<div class="container mx-auto flex items-center justify-between">
-		<img src="/voi-logo.svg" alt="Voi Logo" class="h-8" />
-	</div>
-</nav>
-
 <div
 	class="relative min-h-screen overflow-hidden bg-voi-dark text-white"
 	on:click={handleClickOutside}
 >
-	<div class="container mx-auto px-4 py-8">
-		<div class="relative flex min-h-[90vh] items-center justify-center">
-			<!-- SVG layer for connecting lines -->
-			<svg class="pointer-events-none absolute inset-0 h-full w-full" viewBox="-400 -400 800 800">
-				{#each Object.entries(sections) as [key, _], i}
-					{@const coords = calculateLineCoordinates(i)}
-					<line
-						x1={coords.x1}
-						y1={coords.y1}
-						x2={coords.x2}
-						y2={coords.y2}
-						class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
-						stroke="rgba(255, 255, 255, 0.25)"
-						stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
-						data-section={key}
-						marker-end={hoveredSection === key ? 'url(#arrowhead)' : ''}
-					/>
-				{/each}
+	<div class="container mx-auto h-full px-4">
+		<!-- Desktop Layout (≥750px) -->
+		<div class="relative hidden min-h-screen items-center justify-center md:flex">
+			<!-- Hub and Spoke Container with fixed dimensions -->
+			<div class="relative h-[800px] w-[800px]">
+				<!-- SVG layer for connecting lines -->
+				<svg 
+					class="pointer-events-none absolute inset-0" 
+					viewBox="0 0 800 800"
+				>
+					{#each Object.entries(sections) as [key, _], i}
+						{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
+						<line
+							x1={400 + Math.cos(angle) * hubRadius}
+							y1={400 + Math.sin(angle) * hubRadius}
+							x2={400 + Math.cos(angle) * (spokeLength - tileSize/2)}
+							y2={400 + Math.sin(angle) * (spokeLength - tileSize/2)}
+							class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
+							stroke="rgba(255, 255, 255, 0.25)"
+							stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
+							data-section={key}
+							marker-end={hoveredSection === key ? 'url(#arrowhead)' : ''}
+						/>
+					{/each}
 
-				<defs>
-					<marker
-						id="arrowhead"
-						markerWidth="7"
-						markerHeight="7"
-						refX="6"
-						refY="3.5"
-						orient="auto"
-						fill="rgba(255, 255, 255, 0.3)"
-					>
-						<polygon points="0 0, 7 3.5, 0 7" />
-					</marker>
-				</defs>
-			</svg>
+					<defs>
+						<marker
+							id="arrowhead"
+							markerWidth="7"
+							markerHeight="7"
+							refX="6"
+							refY="3.5"
+							orient="auto"
+							fill="rgba(255, 255, 255, 0.3)"
+						>
+							<polygon points="0 0, 7 3.5, 0 7" />
+						</marker>
+					</defs>
+				</svg>
 
-			<!-- Central Hub -->
-			<div
-				class="absolute z-10 flex h-64
-                  w-64 transform items-center
-                  justify-center rounded-full bg-gradient-to-br from-voi-light
-                  to-voi-dark shadow-[0_0_50px_rgba(103,46,217,0.3)] transition-all duration-300
-                  hover:scale-105"
-			>
-				<div class="p-6 text-center">
-					<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-12" />
-					<p class="mb-4 font-mono text-sm text-white/80">Ecosystem Portal</p>
-					<p class="mx-auto max-w-[150px] font-mono text-xs text-white/60">
-						Click any section to explore
-					</p>
+				<!-- Central Hub -->
+				<div
+					class="absolute left-1/2 top-1/2 z-10 flex h-64 w-64 -translate-x-1/2 -translate-y-1/2 
+						items-center justify-center rounded-full bg-gradient-to-br from-voi-light to-voi-dark 
+						shadow-[0_0_50px_rgba(103,46,217,0.3)] transition-all duration-300 hover:scale-105"
+				>
+					<div class="p-6 text-center">
+						<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-12" />
+						<p class="mb-4 font-mono text-sm text-white/80">Ecosystem Portal</p>
+						<p class="mx-auto max-w-[150px] font-mono text-xs text-white/60">
+							Click any section to explore
+						</p>
+					</div>
 				</div>
-			</div>
 
-			<!-- Orbital Sections -->
-			<div class="relative">
+				<!-- Orbital Sections -->
 				{#each Object.entries(sections) as [key, section], i}
-					{@const angle = i * (360 / Object.keys(sections).length) * (Math.PI / 180)}
-					{@const x = Math.cos(angle) * spokeLength}
-					{@const y = Math.sin(angle) * spokeLength}
+					{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
+					{@const x = 400 + Math.cos(angle) * spokeLength}
+					{@const y = 400 + Math.sin(angle) * spokeLength}
 
 					<div
-						class="absolute -translate-x-1/2 -translate-y-1/2 transform"
-						style="left: calc(50% + {x}px); top: calc(50% + {y}px);"
+						class="absolute left-0 top-0"
+						style="transform: translate({x}px, {y}px) translate(-50%, -50%)"
 					>
 						<button
 							class="section-button group relative"
@@ -243,35 +242,20 @@
 							on:mouseleave={() => handleSectionHover(key, false)}
 						>
 							<div
-								class="flex h-28 w-28
-                          transform items-center justify-center
-                          rounded-2xl border border-white/10
-                          backdrop-blur-md transition-all duration-300
-                          group-hover:scale-110 group-hover:border-white/20 group-hover:shadow-lg
-                          {activeSection === key
-									? 'scale-110 border-white/30 from-white/15 to-white/10 shadow-lg'
-									: ''}
-                          {key === 'gettingStarted'
-									? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg'
-									: 'bg-gradient-to-br from-white/10 to-white/5'}"
+								class="flex h-28 w-28 transform items-center justify-center rounded-2xl 
+									border border-white/10 backdrop-blur-md transition-all duration-300
+									group-hover:scale-110 group-hover:border-white/20 group-hover:shadow-lg
+									{activeSection === key ? 'scale-110 border-white/30 from-white/15 to-white/10 shadow-lg' : ''}
+									{key === 'gettingStarted' ? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg' : 'bg-gradient-to-br from-white/10 to-white/5'}"
 							>
 								<div class="flex flex-col items-center p-4 text-center">
-									<div
-										class="mb-2 flex items-center justify-center
-                             {key === 'gettingStarted' ? 'text-white' : 'text-white/80'}"
-									>
+									<div class="mb-2 flex items-center justify-center {key === 'gettingStarted' ? 'text-white' : 'text-white/80'}">
 										{@html section.icon}
 									</div>
-									<div
-										class="font-display text-sm leading-tight tracking-wide
-                             {key === 'gettingStarted' ? 'font-bold text-white' : ''}"
-									>
+									<div class="font-display text-sm leading-tight tracking-wide {key === 'gettingStarted' ? 'font-bold text-white' : ''}">
 										{section.title}
 									</div>
-									<div
-										class="mt-1 px-1 font-mono text-[10px]
-                             {key === 'gettingStarted' ? 'text-white/80' : 'text-white/60'}"
-									>
+									<div class="mt-1 px-1 font-mono text-[10px] {key === 'gettingStarted' ? 'text-white/80' : 'text-white/60'}">
 										{section.description}
 									</div>
 								</div>
@@ -280,99 +264,146 @@
 					</div>
 				{/each}
 			</div>
+		</div>
 
-			<!-- Modal for expanded content -->
-			{#if activeSection}
-				<div
-					class="fixed inset-0 z-50 flex items-center justify-center p-8"
-					transition:fade={{ duration: 200 }}
-					on:click|self={() => (activeSection = null)}
-				>
-					<!-- Backdrop -->
-					<div
-						class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-						on:click|self={() => (activeSection = null)}
-					></div>
+		<!-- Mobile Layout (<750px) -->
+		<div class="md:hidden">
+			<!-- Mobile Header with increased top padding -->
+			<div class="mb-8 pt-12 text-center">
+				<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-16" />
+				<h1 class="font-display text-2xl font-bold">Ecosystem Portal</h1>
+				<p class="mt-2 font-mono text-sm text-white/60">Explore the Voi ecosystem</p>
+			</div>
 
-					<!-- Modal Content -->
-					<div
-						class="relative flex h-[90vh] w-[98vw] flex-col overflow-hidden
-                   rounded-2xl border border-white/20 bg-gradient-to-br
-                   from-voi-dark to-voi-light shadow-2xl"
-						transition:scale={{ duration: 200 }}
+			<!-- Mobile Section Cards -->
+			<div class="grid gap-4 pb-12">
+				{#each Object.entries(sections) as [key, section]}
+					<button
+						class="w-full transform rounded-xl border border-white/10 bg-gradient-to-br p-4 text-left transition-all
+                   {key === 'gettingStarted'
+							? 'border-white/30 from-white/20 to-white/10 shadow-lg'
+							: 'from-white/10 to-white/5'}
+                   active:scale-[0.98]"
+						on:click={() => toggleSection(key)}
 					>
-						<!-- Header -->
-						<div class="flex items-start justify-between border-b border-white/10 p-8 lg:p-12">
-							<div class="flex-grow">
-								<h2 class="font-display text-3xl font-bold lg:text-4xl">
-									{sections[activeSection].title}
-								</h2>
-								<p class="mt-3 max-w-3xl font-mono text-base text-white/60 lg:text-lg">
-									{sections[activeSection].description}
-								</p>
+						<div class="flex items-center">
+							<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
+								{@html section.icon}
 							</div>
-							<button
-								class="ml-8 flex-shrink-0 rounded-lg p-2 transition-colors hover:bg-white/10"
-								on:click={() => (activeSection = null)}
-							>
+							<div>
+								<h2 class="font-display text-lg font-bold {key === 'gettingStarted' ? 'text-white' : ''}">
+									{section.title}
+								</h2>
+								<p class="font-mono text-sm text-white/60">{section.description}</p>
+							</div>
+							<div class="ml-auto">
 								<svg
-									class="h-6 w-6"
+									class="h-5 w-5 text-white/40"
 									viewBox="0 0 24 24"
 									fill="none"
 									stroke="currentColor"
 									stroke-width="2"
 								>
-									<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+									<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
 								</svg>
-							</button>
+							</div>
 						</div>
+					</button>
+				{/each}
+			</div>
+		</div>
 
-						<!-- Scrollable Content -->
-						<div class="flex-1 overflow-y-auto p-8 lg:p-12">
-							<div class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-								{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
-									<button
-										on:click={() => toggleSubSection(subKey)}
-										class="flex transform flex-col rounded-xl border
+		<!-- Modal for expanded content -->
+		{#if activeSection}
+			<div
+				class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+				transition:fade={{ duration: 200 }}
+				on:click|self={() => (activeSection = null)}
+			>
+				<!-- Backdrop -->
+				<div
+					class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+					on:click|self={() => (activeSection = null)}
+				></div>
+
+				<!-- Modal Content -->
+				<div
+					class="relative flex h-[90vh] w-[98vw] flex-col overflow-hidden
+                   rounded-2xl border border-white/20 bg-gradient-to-br
+                   from-voi-dark to-voi-light shadow-2xl"
+					transition:scale={{ duration: 200 }}
+				>
+					<!-- Header -->
+					<div class="flex items-start justify-between border-b border-white/10 p-8 lg:p-12">
+						<div class="flex-grow">
+							<h2 class="font-display text-3xl font-bold lg:text-4xl">
+								{sections[activeSection].title}
+							</h2>
+							<p class="mt-3 max-w-3xl font-mono text-base text-white/60 lg:text-lg">
+								{sections[activeSection].description}
+							</p>
+						</div>
+						<button
+							class="ml-8 flex-shrink-0 rounded-lg p-2 transition-colors hover:bg-white/10"
+							on:click={() => (activeSection = null)}
+						>
+							<svg
+								class="h-6 w-6"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</button>
+					</div>
+
+					<!-- Scrollable Content -->
+					<div class="flex-1 overflow-y-auto p-8 lg:p-12">
+						<div class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+							{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
+								<button
+									on:click={() => toggleSubSection(subKey)}
+									class="flex transform flex-col rounded-xl border
                            border-white/10 bg-white/5 p-8
                            text-left transition-all duration-200
                            hover:scale-[1.02] hover:border-white/20 hover:bg-white/10
                            hover:shadow-lg lg:p-10"
+								>
+									<h3 class="mb-4 font-display text-xl font-bold lg:text-2xl">
+										{subSection.title}
+									</h3>
+									<p
+										class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg"
 									>
-										<h3 class="mb-4 font-display text-xl font-bold lg:text-2xl">
-											{subSection.title}
-										</h3>
-										<p
-											class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg"
+										{subSection.description}
+									</p>
+									<div
+										class="mt-6 flex items-center font-mono text-sm text-white/60 lg:mt-8 lg:text-base"
+									>
+										<span>Learn more</span>
+										<svg
+											class="ml-2 h-5 w-5"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
 										>
-											{subSection.description}
-										</p>
-										<div
-											class="mt-6 flex items-center font-mono text-sm text-white/60 lg:mt-8 lg:text-base"
-										>
-											<span>Learn more</span>
-											<svg
-												class="ml-2 h-5 w-5"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2"
-											>
-												<path
-													d="M5 12h14M12 5l7 7-7 7"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												/>
-											</svg>
-										</div>
-									</button>
-								{/each}
-							</div>
+											<path
+												d="M5 12h14M12 5l7 7-7 7"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+										</svg>
+									</div>
+								</button>
+							{/each}
 						</div>
 					</div>
 				</div>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -395,26 +426,26 @@
 	}
 
 	.connection-line {
-		stroke-dasharray: 6, 6;
-		animation: flowForward 30s linear infinite;
+		stroke-dasharray: 4, 4;
+		animation: flowForward 20s linear infinite;
 		transition: all 0.3s ease;
 		opacity: 0.5;
 	}
 
 	.connection-line.reverse-flow {
-		animation: flowBackward 30s linear infinite;
+		animation: flowBackward 20s linear infinite;
 		opacity: 0.8;
 	}
 
 	@keyframes flowForward {
 		to {
-			stroke-dashoffset: -200;
+			stroke-dashoffset: -100;
 		}
 	}
 
 	@keyframes flowBackward {
 		to {
-			stroke-dashoffset: 200;
+			stroke-dashoffset: 100;
 		}
 	}
 
