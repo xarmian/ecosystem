@@ -1,432 +1,441 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { fade, scale } from 'svelte/transition';
-  import { tweened } from 'svelte/motion';
+	import { fade, scale } from 'svelte/transition';
 
-  let activeSection: string | null = null;
-  let activeSubSection: string | null = null;
+	// Define type for sections
+	type Section = {
+		title: string;
+		description: string;
+		icon: string;
+		subSections: Record<string, { title: string; description: string }>;
+	};
 
-  let isTourActive = false;
-  let currentTourStep = 0;
-  let tourInterval: ReturnType<typeof setInterval> | null = null;
+	type Sections = Record<string, Section>;
 
-  const tourDuration = 5000; // 5 seconds per section
+	let activeSection: keyof Sections | null = null;
+	let activeSubSection: string | null = null;
+	let hoveredSection: string | null = null;
 
-  const tourDescriptions = {
-    gettingStarted: "Start your journey with Voi! Learn how to set up your wallet, get tokens, and begin developing on the platform.",
-    projects: "Discover the innovative projects building on Voi. From DeFi to NFTs, explore our thriving ecosystem.",
-    community: "Connect with fellow Voi enthusiasts! Join our events, stay updated with news, and participate in community discussions.",
-    governance: "Have your say in Voi's future. Engage with committees, council decisions, and vote on important proposals.",
-    technical: "Dive into the technical side of Voi. Run a node, explore network statistics, and monitor blockchain analytics.",
-    rewards: "Earn rewards through various ecosystem initiatives. Participate in competitions, token wars, and other incentivized activities."
-  };
+	const hubRadius = 32; // Half of the hub width (64/2)
+	const spokeLength = 300; // Back to original distance
+	const tileSize = 28; // Size of the orbital tiles (w-28)
 
-  const sections = {
-    gettingStarted: {
-      title: 'Getting Started',
-      icon: '🚀',
-      description: 'Begin your Voi journey',
-      subSections: {
-        users: { title: 'For Users', description: 'Getting Setup' },
-        developers: { title: 'For Developers', description: 'Start Building' }
-      }
-    },
-    projects: {
-      title: 'Projects',
-      icon: '🔨',
-      description: 'Explore the ecosystem',
-      subSections: {
-        directory: { title: 'Directory', description: 'Browse all projects' },
-        featured: { title: 'Featured', description: 'Highlighted projects' }
-      }
-    },
-    community: {
-      title: 'Community',
-      icon: '👥',
-      description: 'Join the conversation',
-      subSections: {
-        events: { title: 'Events', description: 'Spaces & Meetings' },
-        news: { title: 'News', description: 'Latest Updates' }
-      }
-    },
-    governance: {
-      title: 'Governance',
-      icon: '⚖️',
-      description: 'Shape the future',
-      subSections: {
-        committees: { title: 'Committees', description: 'Working Groups' },
-        council: { title: 'Council', description: 'Leadership' },
-        voting: { title: 'Voting', description: 'Active Proposals' }
-      }
-    },
-    technical: {
-      title: 'Technical',
-      icon: '🔧',
-      description: 'Infrastructure & Data',
-      subSections: {
-        nodes: { title: 'Nodes', description: 'Run a Node' },
-        analytics: { title: 'Analytics', description: 'Network Stats' }
-      }
-    },
-    rewards: {
-      title: 'Rewards',
-      icon: '🎁',
-      description: 'Earn & Participate',
-      subSections: {
-        incentives: { title: 'Incentives', description: 'Earning Opportunities' },
-        tokenWars: { title: 'Token Wars', description: 'Competitive Events' },
-        competitions: { title: 'Competitions', description: 'Games & Challenges' },
-      }
-    }
-  };
+	const sections: Sections = {
+		projects: {
+			title: 'Projects',
+			description: 'Explore the ecosystem',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7V17M4 7H20M4 7L8 3H16L20 7M20 7V17M20 17L16 21H8L4 17" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				directory: { title: 'Directory', description: 'Browse all projects' },
+				featured: { title: 'Featured', description: 'Highlighted projects' }
+			}
+		},
+		community: {
+			title: 'Community',
+			description: 'Join the conversation',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 8H19C20.1046 8 21 8.89543 21 10V16C21 17.1046 20.1046 18 19 18H17V22L13 18H8C6.89543 18 6 17.1046 6 16V15M13 3H5C3.89543 3 3 3.89543 3 5V11C3 12.1046 3.89543 13 5 13H11L15 17V13H17C18.1046 13 19 12.1046 19 11V5C19 3.89543 18.1046 3 17 3H13Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				socials: { title: 'Socials', description: 'Follow the latest' },
+				events: { title: 'Events', description: 'Spaces & Meetings' },
+				news: { title: 'News', description: 'Latest Updates' }
+			}
+		},
+		governance: {
+			title: 'Governance',
+			description: 'Shape the future',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3L20 8.5V15.5L12 21L4 15.5V8.5L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 12L12 21M12 12L20 8.5M12 12L4 8.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				overview: { title: 'Overview', description: 'Governance Structure' },
+				committees: { title: 'Committees', description: 'Working Groups' },
+				council: { title: 'Council', description: 'Leadership' },
+				voting: { title: 'Voting', description: 'Active Proposals' }
+			}
+		},
+		rewards: {
+			title: 'Rewards',
+			description: 'Earn & Participate',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H11.0647L10.4422 4.36974L7.73528 5.48295L6 4L4 6L5.47528 7.7448L4.37755 10.3954L2 11.0647V12.9353L4.37755 13.6046L5.47528 16.2552L4 18L6 20L7.73528 18.5171L10.4422 19.6303L11.0647 22H12.9353L13.5578 19.6303L16.2647 18.5171L18 20L20 18L18.5247 16.2552L19.6224 13.6046L22 12.9353V11.0647L19.6224 10.3954Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				nodeRunning: { title: 'Node Running', description: 'Earn Block Rewards' },
+				incentives: { title: 'Incentives', description: 'Earning Opportunities' },
+				competitions: { title: 'Competitions', description: 'Games & Challenges' }
+			}
+		},
+		funding: {
+			title: 'Funding',
+			description: 'Build with support',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				grants: { title: 'Grants', description: 'Apply for ecosystem funding' },
+				bounties: { title: 'Bounties', description: 'Complete tasks for rewards' },
+				partnerships: { title: 'Partnerships', description: 'Collaborate with Voi' }
+			}
+		},
+		technical: {
+			title: 'Technical',
+			description: 'Infrastructure & Data',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 4V6M14 10V12M10 4V6M10 10V12M6 4V6M6 10V12M3 8H21M5.2 20H18.8C19.9201 20 20.4802 20 20.908 19.782C21.2843 19.5903 21.5903 19.2843 21.782 18.908C22 18.4802 22 17.9201 22 16.8V7.2C22 6.0799 22 5.51984 21.782 5.09202C21.5903 4.71569 21.2843 4.40973 20.908 4.21799C20.4802 4 19.9201 4 18.8 4H5.2C4.0799 4 3.51984 4 3.09202 4.21799C2.71569 4.40973 2.40973 4.71569 2.21799 5.09202C2 5.51984 2 6.07989 2 7.2V16.8C2 17.9201 2 18.4802 2.21799 18.908C2.40973 19.2843 2.71569 19.5903 3.09202 19.782C3.51984 20 4.07989 20 5.2 20Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				nodes: { title: 'Nodes', description: 'Run a Node' },
+				developerDocs: { title: 'Developer Docs', description: 'Documentation & Guides' },
+				analytics: { title: 'Analytics', description: 'Network Stats' }
+			}
+		},
+		gettingStarted: {
+			title: 'Quick Start',
+			description: 'Begin your Voi journey',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3L3 9V21H9V15H15V21H21V9L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				users: { title: 'For Users', description: 'Getting Setup' },
+				developers: { title: 'For Developers', description: 'Start Building' }
+			}
+		},
+		about: {
+			title: 'About',
+			description: 'Vision & Strategy',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8v4m0 4h.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				vision: { title: 'Vision', description: 'Our mission and goals' },
+				tokenomics: { title: 'Tokenomics', description: 'Token distribution and utility' },
+				roadmap: { title: 'Roadmap', description: 'Development timeline' }
+			}
+		}
+	};
 
-  const hubRadius = 32; // Half of the hub width (64/2)
-  const spokeLength = 300; // Match the translateX value from the orbital sections
+	function toggleSection(section: keyof Sections) {
+		if (activeSection === section) {
+			activeSection = null;
+			activeSubSection = null;
+		} else {
+			activeSection = section;
+			activeSubSection = null;
+		}
+	}
 
-  let hoveredSection: string | null = null;
+	function toggleSubSection(subSection: string) {
+		activeSubSection = activeSubSection === subSection ? null : subSection;
+	}
 
-  let remainingTime = tourDuration / 1000;
-  let countdownInterval: ReturnType<typeof setInterval> | null = null;
+	function calculateLineCoordinates(index: number) {
+		const totalSections = Object.keys(sections).length;
+		const angle = index * (360 / totalSections) * (Math.PI / 180);
 
-  function toggleSection(section: string) {
-    if (activeSection === section) {
-      activeSection = null;
-      activeSubSection = null;
-    } else {
-      activeSection = section;
-      activeSubSection = null;
-    }
-  }
+		const x1 = Math.cos(angle) * hubRadius;
+		const y1 = Math.sin(angle) * hubRadius;
 
-  function toggleSubSection(subSection: string) {
-    activeSubSection = activeSubSection === subSection ? null : subSection;
-  }
+		const x2 = Math.cos(angle) * (spokeLength - tileSize);
+		const y2 = Math.sin(angle) * (spokeLength - tileSize);
 
-  function calculateLineCoordinates(index: number) {
-    const totalSections = Object.keys(sections).length;
-    const angle = (index * (360 / totalSections)) * (Math.PI / 180);
-    return {
-      x1: Math.cos(angle) * hubRadius,
-      y1: Math.sin(angle) * hubRadius,
-      x2: Math.cos(angle) * spokeLength,
-      y2: Math.sin(angle) * spokeLength
-    };
-  }
+		return { x1, y1, x2, y2 };
+	}
 
-  function startTour() {
-    isTourActive = true;
-    currentTourStep = 0;
-    activeSection = Object.keys(sections)[0];
-    remainingTime = tourDuration / 1000;
-    
-    // Scroll to center of the page
-    window.scrollTo({
-      top: window.innerHeight / 2,
-      behavior: 'smooth'
-    });
-    
-    // Start countdown timer
-    countdownInterval = setInterval(() => {
-      remainingTime -= 1;
-    }, 1000);
-    
-    tourInterval = setInterval(() => {
-      currentTourStep = (currentTourStep + 1) % Object.keys(sections).length;
-      activeSection = Object.keys(sections)[currentTourStep];
-      remainingTime = tourDuration / 1000; // Reset countdown
-      if (currentTourStep === 0) endTour();
-    }, tourDuration);
-  }
+	function handleClickOutside(event: MouseEvent) {
+		if (activeSection && event.target instanceof Element) {
+			const modal = document.querySelector('.expanded-content');
+			if (modal && !modal.contains(event.target) && !event.target.closest('.section-button')) {
+				activeSection = null;
+				activeSubSection = null;
+			}
+		}
+	}
 
-  function endTour() {
-    isTourActive = false;
-    if (tourInterval) clearInterval(tourInterval);
-    if (countdownInterval) clearInterval(countdownInterval);
-    tourInterval = null;
-    countdownInterval = null;
-    activeSection = null;
-  }
-
-  onDestroy(() => {
-    if (tourInterval) clearInterval(tourInterval);
-    if (countdownInterval) clearInterval(countdownInterval);
-  });
-
-  // Add this function to handle click outside
-  function handleClickOutside(event: MouseEvent) {
-    if (activeSection && event.target instanceof Element) {
-      const modal = document.querySelector('.expanded-content');
-      if (modal && !modal.contains(event.target) && !event.target.closest('.section-button')) {
-        activeSection = null;
-        activeSubSection = null;
-      }
-    }
-  }
-
-  function handleSectionHover(key: string, isEntering: boolean) {
-    hoveredSection = isEntering ? key : null;
-    const line = document.querySelector(`line[data-section="${key}"]`);
-    if (line) {
-      if (isEntering) {
-        line.classList.add('reverse-flow');
-      } else {
-        line.classList.remove('reverse-flow');
-      }
-    }
-  }
-
-  function navigateTour(direction: 'prev' | 'next') {
-    const sectionKeys = Object.keys(sections);
-    if (direction === 'next') {
-      currentTourStep = (currentTourStep + 1) % sectionKeys.length;
-    } else {
-      currentTourStep = currentTourStep === 0 ? sectionKeys.length - 1 : currentTourStep - 1;
-    }
-    activeSection = sectionKeys[currentTourStep];
-    remainingTime = tourDuration / 1000; // Reset countdown
-    
-    // Reset the timer when manually navigating
-    if (tourInterval) {
-      clearInterval(tourInterval);
-      if (countdownInterval) clearInterval(countdownInterval);
-      
-      // Restart countdown
-      countdownInterval = setInterval(() => {
-        remainingTime -= 1;
-      }, 1000);
-      
-      tourInterval = setInterval(() => {
-        currentTourStep = (currentTourStep + 1) % sectionKeys.length;
-        activeSection = sectionKeys[currentTourStep];
-        remainingTime = tourDuration / 1000; // Reset countdown
-        if (currentTourStep === 0) endTour();
-      }, tourDuration);
-    }
-  }
+	function handleSectionHover(key: string, isEntering: boolean) {
+		hoveredSection = isEntering ? key : null;
+	}
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 text-white relative"
-     on:click={handleClickOutside}>
-  <!-- Add the Start Tour button to the central hub -->
-  {#if !activeSection && !isTourActive}
-    <div class="absolute z-20 top-4 right-4">
-      <button
-        on:click={startTour}
-        class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-full
-               flex items-center space-x-2 transition-colors duration-200 shadow-lg"
-      >
-        <span>Take a Tour</span>
-      </button>
-    </div>
-  {/if}
+<!-- Top Navigation -->
+<nav class="absolute left-0 right-0 top-0 z-50 p-4">
+	<div class="container mx-auto flex items-center justify-between">
+		<img src="/voi-logo.svg" alt="Voi Logo" class="h-8" />
+	</div>
+</nav>
 
-  <div 
-    class="fixed inset-0 bg-purple-950 transition-all duration-300 z-20
-           {isTourActive ? 'opacity-80' : 'opacity-0 pointer-events-none'}"
-  />
+<div
+	class="relative min-h-screen overflow-hidden bg-voi-dark text-white"
+	on:click={handleClickOutside}
+>
+	<div class="container mx-auto px-4 py-8">
+		<div class="relative flex min-h-[90vh] items-center justify-center">
+			<!-- SVG layer for connecting lines -->
+			<svg class="pointer-events-none absolute inset-0 h-full w-full" viewBox="-400 -400 800 800">
+				{#each Object.entries(sections) as [key, _], i}
+					{@const coords = calculateLineCoordinates(i)}
+					<line
+						x1={coords.x1}
+						y1={coords.y1}
+						x2={coords.x2}
+						y2={coords.y2}
+						class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
+						stroke="rgba(255, 255, 255, 0.25)"
+						stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
+						data-section={key}
+						marker-end={hoveredSection === key ? 'url(#arrowhead)' : ''}
+					/>
+				{/each}
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="relative min-h-[90vh] flex items-center justify-center">
-      <!-- Update SVG layer -->
-      <svg 
-        class="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="-400 -400 800 800"
-      >
-        {#each Object.entries(sections) as [key, _], i}
-          {@const coords = calculateLineCoordinates(i)}
-          <line
-            x1={coords.x1}
-            y1={coords.y1}
-            x2={coords.x2}
-            y2={coords.y2}
-            class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
-            stroke="rgba(167, 139, 250, 0.3)"
-            stroke-width={activeSection === key || hoveredSection === key ? "4" : "2"}
-            data-section={key}
-            marker-end={hoveredSection === key ? "url(#arrowhead)" : ""}
-          />
-        {/each}
+				<defs>
+					<marker
+						id="arrowhead"
+						markerWidth="7"
+						markerHeight="7"
+						refX="6"
+						refY="3.5"
+						orient="auto"
+						fill="rgba(255, 255, 255, 0.3)"
+					>
+						<polygon points="0 0, 7 3.5, 0 7" />
+					</marker>
+				</defs>
+			</svg>
 
-        <!-- Add arrow marker definition -->
-        <defs>
-          <marker
-            id="arrowhead"
-            markerWidth="10"
-            markerHeight="7"
-            refX="9"
-            refY="3.5"
-            orient="auto"
-          >
-            <polygon
-              points="0 0, 10 3.5, 0 7"
-              fill="rgba(167, 139, 250, 0.8)"
-            />
-          </marker>
-        </defs>
-      </svg>
+			<!-- Central Hub -->
+			<div
+				class="absolute z-10 flex h-64
+                  w-64 transform items-center
+                  justify-center rounded-full bg-gradient-to-br from-voi-light
+                  to-voi-dark shadow-[0_0_50px_rgba(103,46,217,0.3)] transition-all duration-300
+                  hover:scale-105"
+			>
+				<div class="p-6 text-center">
+					<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-12" />
+					<p class="mb-4 font-mono text-sm text-white/80">Ecosystem Portal</p>
+					<p class="mx-auto max-w-[150px] font-mono text-xs text-white/60">
+						Click any section to explore
+					</p>
+				</div>
+			</div>
 
-      <!-- Central Hub -->
-      <div class="absolute {!activeSection ? 'z-10' : 'z-0'} w-64 h-64 bg-purple-700 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform duration-300 border-4 border-purple-400 shadow-lg">
-        <div class="text-center">
-          <h1 class="text-3xl font-bold">Voi Hub</h1>
-          <p class="text-sm text-purple-200 mt-2">Ecosystem Portal</p>
-          {#if !activeSection && !isTourActive}
-            <p class="text-xs text-purple-300 mt-4 max-w-[150px]">Click any section to explore</p>
-          {/if}
-        </div>
-      </div>
+			<!-- Orbital Sections -->
+			<div class="relative">
+				{#each Object.entries(sections) as [key, section], i}
+					{@const angle = i * (360 / Object.keys(sections).length) * (Math.PI / 180)}
+					{@const x = Math.cos(angle) * spokeLength}
+					{@const y = Math.sin(angle) * spokeLength}
 
-      <!-- Update Orbital Sections -->
-      {#each Object.entries(sections) as [key, section], i}
-        <div
-          class="absolute w-48 h-48 transition-all duration-500 section-button"
-          style="
-            transform: rotate({i * 60}deg) translateX(300px) rotate(-{i * 60}deg);
-            z-index: {activeSection === key ? '40' : '25'};
-          "
-          on:mouseenter={() => handleSectionHover(key, true)}
-          on:mouseleave={() => handleSectionHover(key, false)}
-        >
-          <button
-            on:click={() => !isTourActive && toggleSection(key)}
-            class="w-full h-full rounded-full bg-purple-600 hover:bg-purple-500 
-                   flex flex-col items-center justify-center transform transition-all duration-300
-                   {activeSection === key ? 'scale-[2]' : 'hover:scale-110'}
-                   {isTourActive ? 
-                     (activeSection === key ? 'ring-4 ring-yellow-400 scale-[2] brightness-100' : 'opacity-50') 
-                     : 'border-2 border-purple-400'}
-                   shadow-lg relative"
-          >
-            <span class="text-3xl mb-2">{section.icon}</span>
-            <span class="font-bold">{section.title}</span>
-            {#if !activeSection || activeSection === key}
-              <span class="text-xs text-purple-200 mt-1">{section.description}</span>
-            {/if}
-          </button>
+					<div
+						class="absolute -translate-x-1/2 -translate-y-1/2 transform"
+						style="left: calc(50% + {x}px); top: calc(50% + {y}px);"
+					>
+						<button
+							class="section-button group relative"
+							class:active={activeSection === key}
+							on:click={() => toggleSection(key)}
+							on:mouseenter={() => handleSectionHover(key, true)}
+							on:mouseleave={() => handleSectionHover(key, false)}
+						>
+							<div
+								class="flex h-28 w-28
+                          transform items-center justify-center
+                          rounded-2xl border border-white/10
+                          backdrop-blur-md transition-all duration-300
+                          group-hover:scale-110 group-hover:border-white/20 group-hover:shadow-lg
+                          {activeSection === key
+									? 'scale-110 border-white/30 from-white/15 to-white/10 shadow-lg'
+									: ''}
+                          {key === 'gettingStarted'
+									? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg'
+									: 'bg-gradient-to-br from-white/10 to-white/5'}"
+							>
+								<div class="flex flex-col items-center p-4 text-center">
+									<div
+										class="mb-2 flex items-center justify-center
+                             {key === 'gettingStarted' ? 'text-white' : 'text-white/80'}"
+									>
+										{@html section.icon}
+									</div>
+									<div
+										class="font-display text-sm leading-tight tracking-wide
+                             {key === 'gettingStarted' ? 'font-bold text-white' : ''}"
+									>
+										{section.title}
+									</div>
+									<div
+										class="mt-1 px-1 font-mono text-[10px]
+                             {key === 'gettingStarted' ? 'text-white/80' : 'text-white/60'}"
+									>
+										{section.description}
+									</div>
+								</div>
+							</div>
+						</button>
+					</div>
+				{/each}
+			</div>
 
-          <!-- Tour Description Overlay -->
-          {#if isTourActive && activeSection === key}
-            <div
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-20
-                     w-[500px] bg-yellow-400 text-purple-900 rounded-xl p-6 backdrop-blur-sm
-                     shadow-xl z-[60] border-2 border-yellow-500"
-              transition:fade
-            >
-              <div class="flex justify-between items-start mb-4">
-                <p class="text-base font-medium leading-relaxed flex-1 mr-4">
-                  {tourDescriptions[key]}
-                </p>
-                <button
-                  on:click={endTour}
-                  class="flex-shrink-0 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-colors"
-                  title="End Tour"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-              <div class="mt-4 flex justify-between items-center">
-                <div class="text-sm font-medium">
-                  Step {currentTourStep + 1} of {Object.keys(sections).length}
-                </div>
-                <div class="flex items-center gap-4">
-                  <button
-                    on:click={() => navigateTour('prev')}
-                    class="p-2 hover:bg-yellow-500 rounded-full transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <div class="text-sm font-medium">
-                    {remainingTime}s
-                  </div>
-                  <button
-                    on:click={() => navigateTour('next')}
-                    class="p-2 hover:bg-yellow-500 rounded-full transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          {/if}
+			<!-- Modal for expanded content -->
+			{#if activeSection}
+				<div
+					class="fixed inset-0 z-50 flex items-center justify-center p-8"
+					transition:fade={{ duration: 200 }}
+					on:click|self={() => (activeSection = null)}
+				>
+					<!-- Backdrop -->
+					<div
+						class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+						on:click|self={() => (activeSection = null)}
+					></div>
 
-          <!-- Update Regular Expanded Content with higher contrast -->
-          {#if activeSection === key && !isTourActive}
-            <div
-              class="expanded-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-                     w-[800px] bg-purple-900/95 rounded-xl p-8 backdrop-blur-md
-                     border-2 border-purple-400 shadow-xl"
-              transition:scale
-              on:click|stopPropagation
-            >
-              <h2 class="text-2xl font-bold mb-6 text-white">{section.title}</h2>
-              <div class="grid grid-cols-2 gap-6">
-                {#each Object.entries(section.subSections) as [subKey, subSection]}
-                  <button
-                    on:click={() => toggleSubSection(subKey)}
-                    class="bg-purple-800/80 rounded-lg p-6 text-left 
-                           hover:bg-purple-700 transition-colors
-                           border border-purple-500/50 hover:border-purple-400"
-                  >
-                    <h3 class="text-xl font-bold mb-2 text-white">{subSection.title}</h3>
-                    <p class="text-sm text-purple-100">{subSection.description}</p>
-                  </button>
-                {/each}
-              </div>
-            </div>
-          {/if}
-        </div>
-      {/each}
-    </div>
-  </div>
+					<!-- Modal Content -->
+					<div
+						class="relative flex h-[90vh] w-[98vw] flex-col overflow-hidden
+                   rounded-2xl border border-white/20 bg-gradient-to-br
+                   from-voi-dark to-voi-light shadow-2xl"
+						transition:scale={{ duration: 200 }}
+					>
+						<!-- Header -->
+						<div class="flex items-start justify-between border-b border-white/10 p-8 lg:p-12">
+							<div class="flex-grow">
+								<h2 class="font-display text-3xl font-bold lg:text-4xl">
+									{sections[activeSection].title}
+								</h2>
+								<p class="mt-3 max-w-3xl font-mono text-base text-white/60 lg:text-lg">
+									{sections[activeSection].description}
+								</p>
+							</div>
+							<button
+								class="ml-8 flex-shrink-0 rounded-lg p-2 transition-colors hover:bg-white/10"
+								on:click={() => (activeSection = null)}
+							>
+								<svg
+									class="h-6 w-6"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</button>
+						</div>
+
+						<!-- Scrollable Content -->
+						<div class="flex-1 overflow-y-auto p-8 lg:p-12">
+							<div class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+								{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
+									<button
+										on:click={() => toggleSubSection(subKey)}
+										class="flex transform flex-col rounded-xl border
+                           border-white/10 bg-white/5 p-8
+                           text-left transition-all duration-200
+                           hover:scale-[1.02] hover:border-white/20 hover:bg-white/10
+                           hover:shadow-lg lg:p-10"
+									>
+										<h3 class="mb-4 font-display text-xl font-bold lg:text-2xl">
+											{subSection.title}
+										</h3>
+										<p
+											class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg"
+										>
+											{subSection.description}
+										</p>
+										<div
+											class="mt-6 flex items-center font-mono text-sm text-white/60 lg:mt-8 lg:text-base"
+										>
+											<span>Learn more</span>
+											<svg
+												class="ml-2 h-5 w-5"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+											>
+												<path
+													d="M5 12h14M12 5l7 7-7 7"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												/>
+											</svg>
+										</div>
+									</button>
+								{/each}
+							</div>
+						</div>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
 </div>
 
 <style>
-  .connection-line {
-    stroke-dasharray: 10, 10;
-    animation: flowForward 20s linear infinite;
-    transition: all 0.3s ease;
-  }
+	/* Add new animation for subtle pulsing */
+	@keyframes pulse-subtle {
+		0%,
+		100% {
+			transform: scale(1.1);
+			box-shadow: 0 10px 30px -10px rgba(103, 46, 217, 0.3);
+		}
+		50% {
+			transform: scale(1.12);
+			box-shadow: 0 10px 30px -5px rgba(103, 46, 217, 0.4);
+		}
+	}
 
-  .connection-line.reverse-flow {
-    animation: flowBackward 20s linear infinite;
-  }
+	.animate-pulse-subtle {
+		animation: pulse-subtle 3s ease-in-out infinite;
+	}
 
-  @keyframes flowForward {
-    to {
-      stroke-dashoffset: -200;
-    }
-  }
+	.connection-line {
+		stroke-dasharray: 6, 6;
+		animation: flowForward 30s linear infinite;
+		transition: all 0.3s ease;
+		opacity: 0.5;
+	}
 
-  @keyframes flowBackward {
-    to {
-      stroke-dashoffset: 200;
-    }
-  }
+	.connection-line.reverse-flow {
+		animation: flowBackward 30s linear infinite;
+		opacity: 0.8;
+	}
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
+	@keyframes flowForward {
+		to {
+			stroke-dashoffset: -200;
+		}
+	}
 
-  :global(body) {
-    overflow-x: hidden;
-  }
+	@keyframes flowBackward {
+		to {
+			stroke-dashoffset: 200;
+		}
+	}
 
-  :global(.connection-line) {
-    opacity: var(--line-opacity, 1);
-  }
+	:global(body) {
+		@apply overflow-x-hidden bg-voi-dark;
+	}
 
-  :global(.tour-active .connection-line) {
-    --line-opacity: 0.25;
-  }
+	:global(.connection-line) {
+		opacity: var(--line-opacity, 1);
+	}
 
-  :global(.tour-active .connection-line[data-section="{activeSection}"]) {
-    --line-opacity: 1;
-  }
+	:global(.tour-active .connection-line) {
+		--line-opacity: 0.25;
+	}
+
+	:global(.tour-active .connection-line[data-section='{activeSection}']) {
+		--line-opacity: 1;
+	}
+
+	/* Ensure proper stacking context */
+	.section-button {
+		isolation: isolate;
+	}
 </style>
