@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade, scale } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	// Define type for sections
 	type Section = {
@@ -20,7 +21,7 @@
 	const tileSize = 28; // Size of the orbital tiles (w-28)
 
 	const sections: Sections = {
-		gettingStarted: {
+		'getting-started': {
 			title: 'Quick Start',
 			description: 'Begin your Voi journey',
 			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -137,7 +138,7 @@
 	function calculateLineCoordinates(index: number) {
 		const totalSections = Object.keys(sections).length;
 		const angle = (index * (360 / totalSections) - 90) * (Math.PI / 180);
-		
+
 		// Start from the edge of the hub
 		const x1 = Math.cos(angle) * hubRadius;
 		const y1 = Math.sin(angle) * hubRadius;
@@ -163,29 +164,57 @@
 	function handleSectionHover(key: string, isEntering: boolean) {
 		hoveredSection = isEntering ? key : null;
 	}
+
+	// Initialize star positions on mount
+	onMount(() => {
+		const root = document.documentElement;
+		const randomPercent = () => `${Math.random() * 100}%`;
+
+		root.style.setProperty('--star-1', randomPercent());
+		root.style.setProperty('--star-2', randomPercent());
+		root.style.setProperty('--star-3', randomPercent());
+		root.style.setProperty('--star-4', randomPercent());
+		root.style.setProperty('--star-5', randomPercent());
+		root.style.setProperty('--star-6', randomPercent());
+	});
 </script>
 
 <div
 	class="relative min-h-screen overflow-hidden bg-voi-dark text-white"
 	on:click={handleClickOutside}
 >
+	<!-- Background Effects -->
+	<div class="absolute inset-0 overflow-hidden">
+		<!-- Gradient Background -->
+		<div
+			class="bg-gradient-radial absolute inset-0 from-voi-dark via-voi-dark to-black opacity-80"
+		></div>
+
+		<!-- Animated Stars -->
+		<div class="stars-small"></div>
+		<div class="stars-medium"></div>
+		<div class="stars-large"></div>
+
+		<!-- Glowing Orbs -->
+		<div class="glow-orb glow-orb-1"></div>
+		<div class="glow-orb glow-orb-2"></div>
+		<div class="glow-orb glow-orb-3"></div>
+	</div>
+
 	<div class="container mx-auto h-full px-4">
 		<!-- Desktop Layout (≥750px) -->
 		<div class="relative hidden min-h-screen items-center justify-center md:flex">
 			<!-- Hub and Spoke Container with fixed dimensions -->
 			<div class="relative h-[800px] w-[800px]">
 				<!-- SVG layer for connecting lines -->
-				<svg 
-					class="pointer-events-none absolute inset-0" 
-					viewBox="0 0 800 800"
-				>
+				<svg class="pointer-events-none absolute inset-0" viewBox="0 0 800 800">
 					{#each Object.entries(sections) as [key, _], i}
 						{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
 						<line
 							x1={400 + Math.cos(angle) * hubRadius}
 							y1={400 + Math.sin(angle) * hubRadius}
-							x2={400 + Math.cos(angle) * (spokeLength - tileSize/2)}
-							y2={400 + Math.sin(angle) * (spokeLength - tileSize/2)}
+							x2={400 + Math.cos(angle) * (spokeLength - tileSize / 2)}
+							y2={400 + Math.sin(angle) * (spokeLength - tileSize / 2)}
 							class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
 							stroke="rgba(255, 255, 255, 0.25)"
 							stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
@@ -211,8 +240,8 @@
 
 				<!-- Central Hub -->
 				<div
-					class="absolute left-1/2 top-1/2 z-10 flex h-64 w-64 -translate-x-1/2 -translate-y-1/2 
-						items-center justify-center rounded-full bg-gradient-to-br from-voi-light to-voi-dark 
+					class="absolute left-1/2 top-1/2 z-10 flex h-64 w-64 -translate-x-1/2 -translate-y-1/2
+						items-center justify-center rounded-full bg-gradient-to-br from-voi-light to-voi-dark
 						shadow-[0_0_50px_rgba(103,46,217,0.3)] transition-all duration-300 hover:scale-105"
 				>
 					<div class="p-6 text-center">
@@ -242,20 +271,35 @@
 							on:mouseleave={() => handleSectionHover(key, false)}
 						>
 							<div
-								class="flex h-28 w-28 transform items-center justify-center rounded-2xl 
+								class="flex h-28 w-28 transform items-center justify-center rounded-2xl
 									border border-white/10 backdrop-blur-md transition-all duration-300
 									group-hover:scale-110 group-hover:border-white/20 group-hover:shadow-lg
 									{activeSection === key ? 'scale-110 border-white/30 from-white/15 to-white/10 shadow-lg' : ''}
-									{key === 'gettingStarted' ? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg' : 'bg-gradient-to-br from-white/10 to-white/5'}"
+									{key === 'getting-started'
+									? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg'
+									: 'bg-gradient-to-br from-white/10 to-white/5'}"
 							>
 								<div class="flex flex-col items-center p-4 text-center">
-									<div class="mb-2 flex items-center justify-center {key === 'gettingStarted' ? 'text-white' : 'text-white/80'}">
+									<div
+										class="mb-2 flex items-center justify-center {key === 'getting-started'
+											? 'text-white'
+											: 'text-white/80'}"
+									>
 										{@html section.icon}
 									</div>
-									<div class="font-display text-sm leading-tight tracking-wide {key === 'gettingStarted' ? 'font-bold text-white' : ''}">
+									<div
+										class="font-display text-sm leading-tight tracking-wide {key ===
+										'getting-started'
+											? 'font-bold text-white'
+											: ''}"
+									>
 										{section.title}
 									</div>
-									<div class="mt-1 px-1 font-mono text-[10px] {key === 'gettingStarted' ? 'text-white/80' : 'text-white/60'}">
+									<div
+										class="mt-1 px-1 font-mono text-[10px] {key === 'getting-started'
+											? 'text-white/80'
+											: 'text-white/60'}"
+									>
 										{section.description}
 									</div>
 								</div>
@@ -280,7 +324,7 @@
 				{#each Object.entries(sections) as [key, section]}
 					<button
 						class="w-full transform rounded-xl border border-white/10 bg-gradient-to-br p-4 text-left transition-all
-                   {key === 'gettingStarted'
+                   {key === 'getting-started'
 							? 'border-white/30 from-white/20 to-white/10 shadow-lg'
 							: 'from-white/10 to-white/5'}
                    active:scale-[0.98]"
@@ -291,7 +335,11 @@
 								{@html section.icon}
 							</div>
 							<div>
-								<h2 class="font-display text-lg font-bold {key === 'gettingStarted' ? 'text-white' : ''}">
+								<h2
+									class="font-display text-lg font-bold {key === 'getting-started'
+										? 'text-white'
+										: ''}"
+								>
 									{section.title}
 								</h2>
 								<p class="font-mono text-sm text-white/60">{section.description}</p>
@@ -363,8 +411,8 @@
 					<div class="flex-1 overflow-y-auto p-8 lg:p-12">
 						<div class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
 							{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
-								<button
-									on:click={() => toggleSubSection(subKey)}
+								<a
+									href="/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
 									class="flex transform flex-col rounded-xl border
                            border-white/10 bg-white/5 p-8
                            text-left transition-all duration-200
@@ -374,9 +422,7 @@
 									<h3 class="mb-4 font-display text-xl font-bold lg:text-2xl">
 										{subSection.title}
 									</h3>
-									<p
-										class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg"
-									>
+									<p class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg">
 										{subSection.description}
 									</p>
 									<div
@@ -397,7 +443,7 @@
 											/>
 										</svg>
 									</div>
-								</button>
+								</a>
 							{/each}
 						</div>
 					</div>
@@ -468,5 +514,134 @@
 	/* Ensure proper stacking context */
 	.section-button {
 		isolation: isolate;
+	}
+
+	/* Background Effects */
+	.bg-gradient-radial {
+		background: radial-gradient(
+			circle at center,
+			var(--tw-gradient-from) 0%,
+			var(--tw-gradient-via) 50%,
+			var(--tw-gradient-to) 100%
+		);
+	}
+
+	/* Stars Animation */
+	.stars-small,
+	.stars-medium,
+	.stars-large {
+		position: absolute;
+		inset: 0;
+		background: transparent;
+	}
+
+	.stars-small {
+		background-image: radial-gradient(
+				1px 1px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(1px 1px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(1px 1px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 200px 200px;
+		animation: twinkle 4s ease-in-out infinite alternate;
+		opacity: 0.3;
+	}
+
+	.stars-medium {
+		background-image: radial-gradient(
+				1.5px 1.5px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(1.5px 1.5px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(1.5px 1.5px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 300px 300px;
+		animation: twinkle 6s ease-in-out infinite alternate-reverse;
+		opacity: 0.2;
+	}
+
+	.stars-large {
+		background-image: radial-gradient(
+				2px 2px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(2px 2px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(2px 2px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 400px 400px;
+		animation: twinkle 8s ease-in-out infinite alternate;
+		opacity: 0.1;
+	}
+
+	/* Glowing Orbs */
+	.glow-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(60px);
+		opacity: 0.15;
+		animation: float 20s ease-in-out infinite;
+	}
+
+	.glow-orb-1 {
+		width: 300px;
+		height: 300px;
+		background: var(--voi-light);
+		top: 10%;
+		right: 15%;
+		animation-delay: -5s;
+	}
+
+	.glow-orb-2 {
+		width: 400px;
+		height: 400px;
+		background: var(--voi-light);
+		bottom: 15%;
+		left: 10%;
+		animation-delay: -10s;
+	}
+
+	.glow-orb-3 {
+		width: 250px;
+		height: 250px;
+		background: var(--voi-light);
+		top: 40%;
+		left: 25%;
+		animation-delay: -15s;
+	}
+
+	@keyframes twinkle {
+		0% {
+			opacity: 0.2;
+		}
+		100% {
+			opacity: 0.4;
+		}
+	}
+
+	@keyframes float {
+		0%,
+		100% {
+			transform: translate(0, 0);
+		}
+		25% {
+			transform: translate(10px, 10px);
+		}
+		50% {
+			transform: translate(-5px, 15px);
+		}
+		75% {
+			transform: translate(-15px, -5px);
+		}
+	}
+
+	/* Star Positions */
+	:global(:root) {
+		--star-1: 10%;
+		--star-2: 45%;
+		--star-3: 65%;
+		--star-4: 25%;
+		--star-5: 85%;
+		--star-6: 75%;
 	}
 </style>
