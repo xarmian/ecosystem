@@ -298,7 +298,7 @@
 											<div class="grid gap-4 p-4">
 												{#each Object.entries(section.subSections) as [subKey, subSection]}
 													<a
-														href="/{key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+														href="/pages/{key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
 														class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 														on:click={closeNavPanel}
 													>
@@ -476,7 +476,7 @@
 										<div class="grid gap-4">
 											{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
 												<a
-													href="/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+													href="/pages/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
 													class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 													on:click={closeNavPanel}
 												>

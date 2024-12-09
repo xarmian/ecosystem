@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let title: string;
 	export let description: string;
-	export let section: string;
 </script>
 
 <div class="container mx-auto px-4 py-12">
@@ -17,8 +16,8 @@
 	</div>
 
 	<!-- Related Links -->
-	<div class="mt-16 border-t border-white/10 pt-8">
-		<h2 class="mb-6 font-display text-2xl font-bold">Related Resources</h2>
+	<div class="mt-16 border-t border-white/10 pt-8 pb-16">
+		<h2 class="mb-8 font-display text-2xl font-bold">Related Resources</h2>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			<slot name="related" />
 		</div>
