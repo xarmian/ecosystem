@@ -140,9 +140,9 @@
 			title: 'Rewards',
 			description: 'Earn & Participate',
 			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H11.0647L10.4422 4.36974L7.73528 5.48295L6 4L4 6L5.47528 7.7448L4.37755 10.3954L2 11.0647V12.9353L4.37755 13.6046L5.47528 16.2552L4 18L6 20L7.73528 18.5171L10.4422 19.6303L11.0647 22H12.9353L13.5578 19.6303L16.2647 18.5171L18 20L20 18L18.5247 16.2552L19.6224 13.6046L22 12.9353V11.0647L19.6224 10.3954Z" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>`,
+				<circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M8 9L12 15L16 9" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>`,
 			subSections: {
 				nodeRunning: { title: 'Node Running', description: 'Earn Block Rewards' },
 				incentives: { title: 'Incentives', description: 'Earning Opportunities' },
@@ -165,7 +165,8 @@
 			title: 'Technical',
 			description: 'Infrastructure & Data',
 			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 4V6M14 10V12M10 4V6M10 10V12M6 4V6M6 10V12M3 8H21M5.2 20H18.8C19.9201 20 20.4802 20 20.908 19.782C21.2843 19.5903 21.5903 19.2843 21.782 18.908C22 18.4802 22 17.9201 22 16.8V7.2C22 6.0799 22 5.51984 21.782 5.09202C21.5903 4.71569 21.2843 4.40973 20.908 4.21799C20.4802 4 19.9201 4 18.8 4H5.2C4.0799 4 3.51984 4 3.09202 4.21799C2.71569 4.40973 2.40973 4.71569 2.21799 5.09202C2 5.51984 2 6.07989 2 7.2V16.8C2 17.9201 2 18.4802 2.21799 18.908C2.40973 19.2843 2.71569 19.5903 3.09202 19.782C3.51984 20 4.07989 20 5.2 20Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H11.0647L10.4422 4.36974L7.73528 5.48295L6 4L4 6L5.47528 7.7448L4.37755 10.3954L2 11.0647V12.9353L4.37755 13.6046L5.47528 16.2552L4 18L6 20L7.73528 18.5171L10.4422 19.6303L11.0647 22H12.9353L13.5578 19.6303L16.2647 18.5171L18 20L20 18L18.5247 16.2552L19.6224 13.6046L22 12.9353V11.0647L19.6224 10.3954Z" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`,
 			subSections: {
 				nodes: { title: 'Nodes', description: 'Run a Node' },
@@ -191,14 +192,16 @@
 <div class="min-h-screen bg-voi-dark text-white">
 	<!-- Navigation Toggle Button (Mobile Only) -->
 	<button
-		class="fixed top-4 right-4 z-[60] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:bg-white/20 md:hidden"
+		class="fixed right-4 top-4 z-[60] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:bg-white/20 md:hidden"
 		on:click={toggleNavPanel}
 		aria-label="Toggle navigation"
 	>
 		<div class="relative flex h-5 w-5 items-center justify-center">
 			<div
 				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
-				style:transform="rotate({isNavPanelOpen ? '45deg' : '0'}) translateY({isNavPanelOpen ? '0' : '-6px'})"
+				style:transform="rotate({isNavPanelOpen ? '45deg' : '0'}) translateY({isNavPanelOpen
+					? '0'
+					: '-6px'})"
 			></div>
 			<div
 				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
@@ -206,14 +209,16 @@
 			></div>
 			<div
 				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
-				style:transform="rotate({isNavPanelOpen ? '-45deg' : '0'}) translateY({isNavPanelOpen ? '0' : '6px'})"
+				style:transform="rotate({isNavPanelOpen ? '-45deg' : '0'}) translateY({isNavPanelOpen
+					? '0'
+					: '6px'})"
 			></div>
 		</div>
 	</button>
 
 	<!-- Navigation Toggle Button (Desktop Only) -->
 	<button
-		class="fixed top-4 right-4 z-[60] hidden h-12 items-center justify-center rounded-full bg-white/10 px-6 backdrop-blur-md transition-all hover:bg-white/20 md:flex"
+		class="fixed right-4 top-4 z-[60] hidden h-12 items-center justify-center rounded-full bg-white/10 px-6 backdrop-blur-md transition-all hover:bg-white/20 md:flex"
 		on:click={toggleNavPanel}
 		aria-label="Toggle ecosystem navigation"
 	>
@@ -226,12 +231,14 @@
 	{#if isNavPanelOpen}
 		<div
 			class="fixed inset-0 z-50 bg-voi-dark"
-				transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
+			transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
 		>
 			<!-- Background Effects -->
 			<div class="absolute inset-0 overflow-hidden">
 				<!-- Gradient Background -->
-				<div class="bg-gradient-radial absolute inset-0 from-voi-dark via-voi-dark to-black opacity-80"></div>
+				<div
+					class="bg-gradient-radial absolute inset-0 from-voi-dark via-voi-dark to-black opacity-80"
+				></div>
 
 				<!-- Animated Stars -->
 				<div class="stars-small"></div>
@@ -257,16 +264,18 @@
 
 						<div class="grid gap-4 pb-12">
 							{#each Object.entries(sections) as [key, section]}
-								<div 
-									class="overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br cursor-pointer
+								<div
+									class="cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br
 											{key === 'getting-started'
-											? 'border-white/30 from-white/20 to-white/10 shadow-lg'
-											: 'from-white/10 to-white/5'}"
+										? 'border-white/30 from-white/20 to-white/10 shadow-lg'
+										: 'from-white/10 to-white/5'}"
 									on:click={() => toggleSection(key)}
 								>
 									<div class="w-full p-4 text-left transition-all active:scale-[0.98]">
 										<div class="flex items-center">
-											<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
+											<div
+												class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5"
+											>
 												{@html section.icon}
 											</div>
 											<div>
@@ -281,7 +290,10 @@
 											</div>
 											<div class="ml-auto">
 												<svg
-													class="h-5 w-5 text-white/40 transform transition-transform duration-300 {activeSection === key ? 'rotate-90' : ''}"
+													class="h-5 w-5 transform text-white/40 transition-transform duration-300 {activeSection ===
+													key
+														? 'rotate-90'
+														: ''}"
 													viewBox="0 0 24 24"
 													fill="none"
 													stroke="currentColor"
@@ -298,7 +310,9 @@
 											<div class="grid gap-4 p-4">
 												{#each Object.entries(section.subSections) as [subKey, subSection]}
 													<a
-														href="/pages/{key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+														href="/pages/{key
+															.toLowerCase()
+															.replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
 														class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 														on:click={closeNavPanel}
 													>
@@ -331,11 +345,15 @@
 					</div>
 
 					<!-- Desktop Navigation (≥ 768px) -->
-					<div class="hidden md:flex relative min-h-screen items-center justify-center">
+					<div class="relative hidden min-h-screen items-center justify-center md:flex">
 						<!-- Hub and Spoke Container -->
 						<div class="relative h-[800px] w-[800px]">
 							<!-- SVG layer for connecting lines -->
-							<svg class="pointer-events-none absolute inset-0" style="z-index: 1;" viewBox="0 0 800 800">
+							<svg
+								class="pointer-events-none absolute inset-0"
+								style="z-index: 1;"
+								viewBox="0 0 800 800"
+							>
 								{#each Object.entries(sections) as [key, _], i}
 									{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
 									<line
@@ -469,14 +487,20 @@
 													stroke="currentColor"
 													stroke-width="2"
 												>
-													<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+													<path
+														d="M6 18L18 6M6 6l12 12"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													/>
 												</svg>
 											</button>
 										</div>
 										<div class="grid gap-4">
 											{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
 												<a
-													href="/pages/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+													href="/pages/{activeSection
+														.toLowerCase()
+														.replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
 													class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 													on:click={closeNavPanel}
 												>
@@ -515,8 +539,6 @@
 	<main class="pt-16">
 		<slot />
 	</main>
-
-
 </div>
 
 <style>
