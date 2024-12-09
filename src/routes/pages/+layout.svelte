@@ -255,7 +255,7 @@
 							<p class="mt-2 font-mono text-sm text-white/60">Explore the Voi ecosystem</p>
 						</div>
 
-						<div class="grid gap-4">
+						<div class="grid gap-4 pb-12">
 							{#each Object.entries(sections) as [key, section]}
 								<div 
 									class="overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br cursor-pointer
