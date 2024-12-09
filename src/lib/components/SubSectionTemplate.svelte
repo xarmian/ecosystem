@@ -16,7 +16,7 @@
 	</div>
 
 	<!-- Related Links -->
-	<div class="mt-16 border-t border-white/10 pt-8 pb-16">
+	<div class="mt-16 border-t border-white/10 pb-16 pt-8">
 		<h2 class="mb-8 font-display text-2xl font-bold">Related Resources</h2>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			<slot name="related" />

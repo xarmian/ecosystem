@@ -144,7 +144,7 @@
 				<path d="M8 9L12 15L16 9" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`,
 			subSections: {
-				nodeRunning: { title: 'Node Running', description: 'Earn Block Rewards' },
+				'node-running': { title: 'Node Running', description: 'Earn Block Rewards' },
 				incentives: { title: 'Incentives', description: 'Earning Opportunities' },
 				competitions: { title: 'Competitions', description: 'Games & Challenges' }
 			}
@@ -170,7 +170,7 @@
             </svg>`,
 			subSections: {
 				nodes: { title: 'Nodes', description: 'Run a Node' },
-				developerDocs: { title: 'Developer Docs', description: 'Documentation & Guides' },
+				'developer-docs': { title: 'Developer Docs', description: 'Documentation & Guides' },
 				analytics: { title: 'Analytics', description: 'Network Stats' }
 			}
 		}
