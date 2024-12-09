@@ -3,15 +3,13 @@
 </script>
 
 <div class="min-h-screen bg-voi-dark text-white">
-	<!-- Navigation -->
-
-	<!-- Main Content -->
-	<main>
+	<main class="min-h-screen">
 		<slot />
 	</main>
-
-	<!-- Footer -->
 </div>
 
 <style>
+	:global(body) {
+		@apply bg-voi-dark;
+	}
 </style>

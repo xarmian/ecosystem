@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, scale } from 'svelte/transition';
+	import { fade, scale, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 
 	// Define type for sections
@@ -307,6 +307,73 @@
 						</button>
 					</div>
 				{/each}
+
+				<!-- Desktop Modal -->
+				{#if activeSection}
+					<div
+						class="fixed inset-0 z-50 flex items-center justify-center p-4"
+						transition:fade={{ duration: 200 }}
+						on:click|self={() => (activeSection = null)}
+					>
+						<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+						<div
+							class="relative w-full max-w-2xl rounded-2xl border border-white/20 bg-gradient-to-br from-voi-dark to-voi-light p-8 shadow-2xl"
+							transition:scale={{ duration: 200 }}
+						>
+							<div class="mb-6 flex items-start justify-between">
+								<div>
+									<h2 class="font-display text-3xl font-bold">
+										{sections[activeSection].title}
+									</h2>
+									<p class="mt-2 font-mono text-lg text-white/60">
+										{sections[activeSection].description}
+									</p>
+								</div>
+								<button
+									class="rounded-lg p-2 transition-colors hover:bg-white/10"
+									on:click={() => (activeSection = null)}
+								>
+									<svg
+										class="h-6 w-6"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										>
+										<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+									</svg>
+								</button>
+							</div>
+							<div class="grid gap-4">
+								{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
+									<a
+											href="/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+											class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
+										>
+										<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
+										<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
+										<div class="mt-4 flex items-center font-mono text-sm text-white/40">
+											<span>Learn more</span>
+											<svg
+												class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+											>
+												<path
+													d="M5 12h14M12 5l7 7-7 7"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												/>
+											</svg>
+										</div>
+									</a>
+								{/each}
+							</div>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 
@@ -322,134 +389,77 @@
 			<!-- Mobile Section Cards -->
 			<div class="grid gap-4 pb-12">
 				{#each Object.entries(sections) as [key, section]}
-					<button
-						class="w-full transform rounded-xl border border-white/10 bg-gradient-to-br p-4 text-left transition-all
-                   {key === 'getting-started'
-							? 'border-white/30 from-white/20 to-white/10 shadow-lg'
-							: 'from-white/10 to-white/5'}
-                   active:scale-[0.98]"
+					<div 
+						class="overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br cursor-pointer
+								{key === 'getting-started'
+								? 'border-white/30 from-white/20 to-white/10 shadow-lg'
+								: 'from-white/10 to-white/5'}"
 						on:click={() => toggleSection(key)}
 					>
-						<div class="flex items-center">
-							<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
-								{@html section.icon}
-							</div>
-							<div>
-								<h2
-									class="font-display text-lg font-bold {key === 'getting-started'
-										? 'text-white'
-										: ''}"
-								>
-									{section.title}
-								</h2>
-								<p class="font-mono text-sm text-white/60">{section.description}</p>
-							</div>
-							<div class="ml-auto">
-								<svg
-									class="h-5 w-5 text-white/40"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-								>
-									<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
+						<div class="w-full p-4 text-left transition-all active:scale-[0.98]">
+							<div class="flex items-center">
+								<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
+									{@html section.icon}
+								</div>
+								<div>
+									<h2
+										class="font-display text-lg font-bold {key === 'getting-started'
+											? 'text-white'
+											: ''}"
+									>
+										{section.title}
+									</h2>
+									<p class="font-mono text-sm text-white/60">{section.description}</p>
+								</div>
+								<div class="ml-auto">
+									<svg
+										class="h-5 w-5 text-white/40 transform transition-transform duration-300 {activeSection === key ? 'rotate-90' : ''}"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+									>
+										<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+									</svg>
+								</div>
 							</div>
 						</div>
-					</button>
+
+						{#if activeSection === key}
+							<div class="border-t border-white/10 bg-white/5" transition:slide>
+								<div class="grid gap-4 p-4">
+									{#each Object.entries(section.subSections) as [subKey, subSection]}
+										<a
+											href="/{key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+											class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
+										>
+											<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
+											<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
+											<div class="mt-4 flex items-center font-mono text-sm text-white/40">
+												<span>Learn more</span>
+												<svg
+													class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="2"
+												>
+													<path
+														d="M5 12h14M12 5l7 7-7 7"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													/>
+												</svg>
+											</div>
+										</a>
+									{/each}
+								</div>
+							</div>
+						{/if}
+					</div>
 				{/each}
 			</div>
 		</div>
-
-		<!-- Modal for expanded content -->
-		{#if activeSection}
-			<div
-				class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
-				transition:fade={{ duration: 200 }}
-				on:click|self={() => (activeSection = null)}
-			>
-				<!-- Backdrop -->
-				<div
-					class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-					on:click|self={() => (activeSection = null)}
-				></div>
-
-				<!-- Modal Content -->
-				<div
-					class="relative flex h-[90vh] w-[98vw] flex-col overflow-hidden
-                   rounded-2xl border border-white/20 bg-gradient-to-br
-                   from-voi-dark to-voi-light shadow-2xl"
-					transition:scale={{ duration: 200 }}
-				>
-					<!-- Header -->
-					<div class="flex items-start justify-between border-b border-white/10 p-8 lg:p-12">
-						<div class="flex-grow">
-							<h2 class="font-display text-3xl font-bold lg:text-4xl">
-								{sections[activeSection].title}
-							</h2>
-							<p class="mt-3 max-w-3xl font-mono text-base text-white/60 lg:text-lg">
-								{sections[activeSection].description}
-							</p>
-						</div>
-						<button
-							class="ml-8 flex-shrink-0 rounded-lg p-2 transition-colors hover:bg-white/10"
-							on:click={() => (activeSection = null)}
-						>
-							<svg
-								class="h-6 w-6"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-							>
-								<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-							</svg>
-						</button>
-					</div>
-
-					<!-- Scrollable Content -->
-					<div class="flex-1 overflow-y-auto p-8 lg:p-12">
-						<div class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-							{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
-								<a
-									href="/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
-									class="flex transform flex-col rounded-xl border
-                           border-white/10 bg-white/5 p-8
-                           text-left transition-all duration-200
-                           hover:scale-[1.02] hover:border-white/20 hover:bg-white/10
-                           hover:shadow-lg lg:p-10"
-								>
-									<h3 class="mb-4 font-display text-xl font-bold lg:text-2xl">
-										{subSection.title}
-									</h3>
-									<p class="flex-grow font-mono text-base leading-relaxed text-white/80 lg:text-lg">
-										{subSection.description}
-									</p>
-									<div
-										class="mt-6 flex items-center font-mono text-sm text-white/60 lg:mt-8 lg:text-base"
-									>
-										<span>Learn more</span>
-										<svg
-											class="ml-2 h-5 w-5"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-										>
-											<path
-												d="M5 12h14M12 5l7 7-7 7"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											/>
-										</svg>
-									</div>
-								</a>
-							{/each}
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
 	</div>
 </div>
 

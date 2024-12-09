@@ -1,60 +1,504 @@
 <script lang="ts">
 	import '../../app.css';
+	import { fade, scale, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 
-	let isMobileMenuOpen = false;
+	let isNavPanelOpen = false;
 
-	function toggleMobileMenu() {
-		isMobileMenuOpen = !isMobileMenuOpen;
-		const hamburger = document.querySelector('.hamburger');
-		hamburger?.setAttribute('aria-expanded', isMobileMenuOpen.toString());
-		const mobileMenu = document.querySelector('.mobile-menu');
-		mobileMenu?.setAttribute('aria-hidden', (!isMobileMenuOpen).toString());
+	// Initialize star positions on mount
+	onMount(() => {
+		const root = document.documentElement;
+		const randomPercent = () => `${Math.random() * 100}%`;
+
+		function updateStarPositions() {
+			root.style.setProperty('--star-1', randomPercent());
+			root.style.setProperty('--star-2', randomPercent());
+			root.style.setProperty('--star-3', randomPercent());
+			root.style.setProperty('--star-4', randomPercent());
+			root.style.setProperty('--star-5', randomPercent());
+			root.style.setProperty('--star-6', randomPercent());
+		}
+
+		// Initial positions
+		updateStarPositions();
+
+		// Update positions every 20 seconds
+		const interval = setInterval(updateStarPositions, 20000);
+
+		return () => {
+			clearInterval(interval);
+			toggleScrollLock(false);
+		};
+	});
+
+	// Define type for sections
+	type Section = {
+		title: string;
+		description: string;
+		icon: string;
+		subSections: Record<string, { title: string; description: string }>;
+	};
+
+	type Sections = Record<string, Section>;
+
+	let activeSection: keyof Sections | null = null;
+	let hoveredSection: string | null = null;
+
+	const hubRadius = 32;
+	const spokeLength = 300;
+	const tileSize = 28;
+
+	// Handle scroll locking
+	function toggleScrollLock(lock: boolean) {
+		if (lock) {
+			document.body.style.overflow = 'hidden';
+			document.body.style.position = 'fixed';
+			document.body.style.width = '100%';
+			document.body.style.height = '100%';
+		} else {
+			document.body.style.overflow = '';
+			document.body.style.position = '';
+			document.body.style.width = '';
+			document.body.style.height = '';
+		}
 	}
 
-	onMount(() => {
-		// Close mobile menu when clicking outside
-		document.addEventListener('click', (e) => {
-			const target = e.target as HTMLElement;
-			if (!target.closest('.mobile-menu') && !target.closest('.hamburger') && isMobileMenuOpen) {
-				toggleMobileMenu();
+	function toggleNavPanel() {
+		isNavPanelOpen = !isNavPanelOpen;
+		toggleScrollLock(isNavPanelOpen);
+	}
+
+	function closeNavPanel() {
+		isNavPanelOpen = false;
+		toggleScrollLock(false);
+	}
+
+	// Define sections
+	const sections: Sections = {
+		'getting-started': {
+			title: 'Quick Start',
+			description: 'Begin your Voi journey',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3L3 9V21H9V15H15V21H21V9L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				users: { title: 'For Users', description: 'Getting Setup' },
+				developers: { title: 'For Developers', description: 'Start Building' }
 			}
-		});
-	});
+		},
+		about: {
+			title: 'About',
+			description: 'Vision & Strategy',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8v4m0 4h.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				vision: { title: 'Vision', description: 'Our mission and goals' },
+				tokenomics: { title: 'Tokenomics', description: 'Token distribution and utility' },
+				roadmap: { title: 'Roadmap', description: 'Development timeline' }
+			}
+		},
+		projects: {
+			title: 'Projects',
+			description: 'Explore the ecosystem',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7V17M4 7H20M4 7L8 3H16L20 7M20 7V17M20 17L16 21H8L4 17" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				directory: { title: 'Directory', description: 'Browse all projects' },
+				featured: { title: 'Featured', description: 'Highlighted projects' }
+			}
+		},
+		community: {
+			title: 'Community',
+			description: 'Join the conversation',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 8H19C20.1046 8 21 8.89543 21 10V16C21 17.1046 20.1046 18 19 18H17V22L13 18H8C6.89543 18 6 17.1046 6 16V15M13 3H5C3.89543 3 3 3.89543 3 5V11C3 12.1046 3.89543 13 5 13H11L15 17V13H17C18.1046 13 19 12.1046 19 11V5C19 3.89543 18.1046 3 17 3H13Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				socials: { title: 'Socials', description: 'Follow the latest' },
+				events: { title: 'Events', description: 'Spaces & Meetings' },
+				news: { title: 'News', description: 'Latest Updates' }
+			}
+		},
+		governance: {
+			title: 'Governance',
+			description: 'Shape the future',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3L20 8.5V15.5L12 21L4 15.5V8.5L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 12L12 21M12 12L20 8.5M12 12L4 8.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				overview: { title: 'Overview', description: 'Governance Structure' },
+				committees: { title: 'Committees', description: 'Working Groups' },
+				council: { title: 'Council', description: 'Leadership' },
+				voting: { title: 'Voting', description: 'Active Proposals' }
+			}
+		},
+		rewards: {
+			title: 'Rewards',
+			description: 'Earn & Participate',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H11.0647L10.4422 4.36974L7.73528 5.48295L6 4L4 6L5.47528 7.7448L4.37755 10.3954L2 11.0647V12.9353L4.37755 13.6046L5.47528 16.2552L4 18L6 20L7.73528 18.5171L10.4422 19.6303L11.0647 22H12.9353L13.5578 19.6303L16.2647 18.5171L18 20L20 18L18.5247 16.2552L19.6224 13.6046L22 12.9353V11.0647L19.6224 10.3954Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				nodeRunning: { title: 'Node Running', description: 'Earn Block Rewards' },
+				incentives: { title: 'Incentives', description: 'Earning Opportunities' },
+				competitions: { title: 'Competitions', description: 'Games & Challenges' }
+			}
+		},
+		funding: {
+			title: 'Funding',
+			description: 'Build with support',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				grants: { title: 'Grants', description: 'Apply for ecosystem funding' },
+				bounties: { title: 'Bounties', description: 'Complete tasks for rewards' },
+				partnerships: { title: 'Partnerships', description: 'Collaborate with Voi' }
+			}
+		},
+		technical: {
+			title: 'Technical',
+			description: 'Infrastructure & Data',
+			icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 4V6M14 10V12M10 4V6M10 10V12M6 4V6M6 10V12M3 8H21M5.2 20H18.8C19.9201 20 20.4802 20 20.908 19.782C21.2843 19.5903 21.5903 19.2843 21.782 18.908C22 18.4802 22 17.9201 22 16.8V7.2C22 6.0799 22 5.51984 21.782 5.09202C21.5903 4.71569 21.2843 4.40973 20.908 4.21799C20.4802 4 19.9201 4 18.8 4H5.2C4.0799 4 3.51984 4 3.09202 4.21799C2.71569 4.40973 2.40973 4.71569 2.21799 5.09202C2 5.51984 2 6.07989 2 7.2V16.8C2 17.9201 2 18.4802 2.21799 18.908C2.40973 19.2843 2.71569 19.5903 3.09202 19.782C3.51984 20 4.07989 20 5.2 20Z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`,
+			subSections: {
+				nodes: { title: 'Nodes', description: 'Run a Node' },
+				developerDocs: { title: 'Developer Docs', description: 'Documentation & Guides' },
+				analytics: { title: 'Analytics', description: 'Network Stats' }
+			}
+		}
+	};
+
+	function toggleSection(section: keyof Sections) {
+		if (activeSection === section) {
+			activeSection = null;
+		} else {
+			activeSection = section;
+		}
+	}
+
+	function handleSectionHover(key: string, isEntering: boolean) {
+		hoveredSection = isEntering ? key : null;
+	}
 </script>
 
 <div class="min-h-screen bg-voi-dark text-white">
-	<!-- Navigation -->
-	<nav class="nav" role="navigation">
-		<div class="logo">
-			<a href="/">
-				<img src="/voi-logo.svg" alt="Voi Logo" class="nav-logo">
-			</a>
+	<!-- Navigation Toggle Button -->
+	<button
+		class="fixed top-4 right-4 z-[60] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:bg-white/20"
+		on:click={toggleNavPanel}
+		aria-label="Toggle navigation"
+	>
+		<div class="relative flex h-5 w-5 items-center justify-center">
+			<div
+				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
+				style:transform="rotate({isNavPanelOpen ? '45deg' : '0'}) translateY({isNavPanelOpen ? '0' : '-6px'})"
+			></div>
+			<div
+				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
+				style:opacity={isNavPanelOpen ? '0' : '1'}
+			></div>
+			<div
+				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
+				style:transform="rotate({isNavPanelOpen ? '-45deg' : '0'}) translateY({isNavPanelOpen ? '0' : '6px'})"
+			></div>
 		</div>
-		<button 
-			class="hamburger" 
-			aria-label="Toggle menu" 
-			aria-expanded="false"
-			on:click={toggleMobileMenu}
+	</button>
+
+	<!-- Navigation Panel -->
+	{#if isNavPanelOpen}
+		<div
+			class="fixed inset-0 z-50 bg-voi-dark"
+			transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
 		>
-			<div class:open={isMobileMenuOpen}></div>
-			<div class:open={isMobileMenuOpen}></div>
-			<div class:open={isMobileMenuOpen}></div>
-		</button>
-		<div class="nav-links" role="menubar">
-			<a href="https://docs.voi.network/" class="nav-btn" role="menuitem">Learn More</a>
-			<a href="https://ecosystem.voi.network/" class="nav-btn primary-btn" role="menuitem">Ecosystem Hub</a>
+			<!-- Background Effects -->
+			<div class="absolute inset-0 overflow-hidden">
+				<!-- Gradient Background -->
+				<div class="bg-gradient-radial absolute inset-0 from-voi-dark via-voi-dark to-black opacity-80"></div>
+
+				<!-- Animated Stars -->
+				<div class="stars-small"></div>
+				<div class="stars-medium"></div>
+				<div class="stars-large"></div>
+
+				<!-- Glowing Orbs -->
+				<div class="glow-orb glow-orb-1"></div>
+				<div class="glow-orb glow-orb-2"></div>
+				<div class="glow-orb glow-orb-3"></div>
+			</div>
+
+			<div class="relative h-full overflow-auto">
+				<div class="container mx-auto h-full px-4">
+					<!-- Mobile Navigation (< 768px) -->
+					<div class="md:hidden">
+						<!-- Header with Logo -->
+						<div class="mb-8 pt-20 text-center">
+							<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-16" />
+							<h1 class="font-display text-2xl font-bold">Ecosystem Portal</h1>
+							<p class="mt-2 font-mono text-sm text-white/60">Explore the Voi ecosystem</p>
+						</div>
+
+						<div class="grid gap-4">
+							{#each Object.entries(sections) as [key, section]}
+								<div 
+									class="overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br cursor-pointer
+											{key === 'getting-started'
+											? 'border-white/30 from-white/20 to-white/10 shadow-lg'
+											: 'from-white/10 to-white/5'}"
+									on:click={() => toggleSection(key)}
+								>
+									<div class="w-full p-4 text-left transition-all active:scale-[0.98]">
+										<div class="flex items-center">
+											<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
+												{@html section.icon}
+											</div>
+											<div>
+												<h2
+													class="font-display text-lg font-bold {key === 'getting-started'
+														? 'text-white'
+														: ''}"
+												>
+													{section.title}
+												</h2>
+												<p class="font-mono text-sm text-white/60">{section.description}</p>
+											</div>
+											<div class="ml-auto">
+												<svg
+													class="h-5 w-5 text-white/40 transform transition-transform duration-300 {activeSection === key ? 'rotate-90' : ''}"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="2"
+												>
+													<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+												</svg>
+											</div>
+										</div>
+									</div>
+
+									{#if activeSection === key}
+										<div class="border-t border-white/10 bg-white/5" transition:slide>
+											<div class="grid gap-4 p-4">
+												{#each Object.entries(section.subSections) as [subKey, subSection]}
+													<a
+														href="/{key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+														class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
+														on:click={closeNavPanel}
+													>
+														<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
+														<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
+														<div class="mt-4 flex items-center font-mono text-sm text-white/40">
+															<span>Learn more</span>
+															<svg
+																class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+																viewBox="0 0 24 24"
+																fill="none"
+																stroke="currentColor"
+																stroke-width="2"
+															>
+																<path
+																	d="M5 12h14M12 5l7 7-7 7"
+																	stroke-linecap="round"
+																	stroke-linejoin="round"
+																/>
+															</svg>
+														</div>
+													</a>
+												{/each}
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					</div>
+
+					<!-- Desktop Navigation (≥ 768px) -->
+					<div class="hidden md:flex relative min-h-screen items-center justify-center">
+						<!-- Hub and Spoke Container -->
+						<div class="relative h-[800px] w-[800px]">
+							<!-- SVG layer for connecting lines -->
+							<svg class="pointer-events-none absolute inset-0" style="z-index: 1;" viewBox="0 0 800 800">
+								{#each Object.entries(sections) as [key, _], i}
+									{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
+									<line
+										x1={400 + Math.cos(angle) * hubRadius}
+										y1={400 + Math.sin(angle) * hubRadius}
+										x2={400 + Math.cos(angle) * (spokeLength - tileSize / 2)}
+										y2={400 + Math.sin(angle) * (spokeLength - tileSize / 2)}
+										class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
+										stroke="rgba(255, 255, 255, 0.25)"
+										stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
+										data-section={key}
+										marker-end={hoveredSection === key ? 'url(#arrowhead)' : ''}
+									/>
+								{/each}
+
+								<defs>
+									<marker
+										id="arrowhead"
+										markerWidth="7"
+										markerHeight="7"
+										refX="6"
+										refY="3.5"
+										orient="auto"
+										fill="rgba(255, 255, 255, 0.3)"
+									>
+										<polygon points="0 0, 7 3.5, 0 7" />
+									</marker>
+								</defs>
+							</svg>
+
+							<!-- Central Hub -->
+							<div
+								class="absolute left-1/2 top-1/2 flex h-64 w-64 -translate-x-1/2 -translate-y-1/2
+									items-center justify-center rounded-full bg-gradient-to-br from-voi-light to-voi-dark
+									shadow-[0_0_50px_rgba(103,46,217,0.3)] transition-all duration-300 hover:scale-105"
+								style="z-index: 5;"
+							>
+								<div class="p-6 text-center">
+									<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-12" />
+									<p class="mb-4 font-mono text-sm text-white/80">Ecosystem Portal</p>
+									<p class="mx-auto max-w-[150px] font-mono text-xs text-white/60">
+										Click any section to explore
+									</p>
+								</div>
+							</div>
+
+							<!-- Section Buttons -->
+							{#each Object.entries(sections) as [key, section], i}
+								{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
+								{@const x = 400 + Math.cos(angle) * spokeLength}
+								{@const y = 400 + Math.sin(angle) * spokeLength}
+
+								<div
+									class="absolute"
+									style="transform: translate({x}px, {y}px) translate(-50%, -50%); z-index: 10;"
+								>
+									<button
+										class="section-button group relative"
+										class:active={activeSection === key}
+										on:mouseenter={() => handleSectionHover(key, true)}
+										on:mouseleave={() => handleSectionHover(key, false)}
+										on:click={() => toggleSection(key)}
+									>
+										<div
+											class="flex h-28 w-28 transform items-center justify-center rounded-2xl
+												border border-white/10 backdrop-blur-md transition-all duration-300
+												group-hover:scale-110 group-hover:border-white/20 group-hover:shadow-lg
+												{activeSection === key ? 'scale-110 border-white/30 from-white/15 to-white/10 shadow-lg' : ''}
+												{key === 'getting-started'
+												? 'animate-pulse-subtle scale-110 border-white/30 bg-gradient-to-br from-white/20 to-white/10 shadow-lg'
+												: 'bg-gradient-to-br from-white/10 to-white/5'}"
+										>
+											<div class="flex flex-col items-center p-4 text-center">
+												<div
+													class="mb-2 flex items-center justify-center {key === 'getting-started'
+														? 'text-white'
+														: 'text-white/80'}"
+												>
+													{@html section.icon}
+												</div>
+												<div
+													class="font-display text-sm leading-tight tracking-wide {key ===
+													'getting-started'
+														? 'font-bold text-white'
+														: ''}"
+												>
+													{section.title}
+												</div>
+												<div
+													class="mt-1 px-1 font-mono text-[10px] {key === 'getting-started'
+														? 'text-white/80'
+														: 'text-white/60'}"
+												>
+													{section.description}
+												</div>
+											</div>
+										</div>
+									</button>
+								</div>
+							{/each}
+
+							<!-- Desktop Modal -->
+							{#if activeSection}
+								<div
+									class="fixed inset-0 z-50 flex items-center justify-center p-4"
+									transition:fade={{ duration: 200 }}
+									on:click|self={() => (activeSection = null)}
+								>
+									<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+									<div
+										class="relative w-full max-w-2xl rounded-2xl border border-white/20 bg-gradient-to-br from-voi-dark to-voi-light p-8 shadow-2xl"
+										transition:scale={{ duration: 200 }}
+									>
+										<div class="mb-6 flex items-start justify-between">
+											<div>
+												<h2 class="font-display text-3xl font-bold">
+													{sections[activeSection].title}
+												</h2>
+												<p class="mt-2 font-mono text-lg text-white/60">
+													{sections[activeSection].description}
+												</p>
+											</div>
+											<button
+												class="rounded-lg p-2 transition-colors hover:bg-white/10"
+												on:click={() => (activeSection = null)}
+											>
+												<svg
+													class="h-6 w-6"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="2"
+												>
+													<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+												</svg>
+											</button>
+										</div>
+										<div class="grid gap-4">
+											{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
+												<a
+													href="/{activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+													class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
+													on:click={closeNavPanel}
+												>
+													<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
+													<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
+													<div class="mt-4 flex items-center font-mono text-sm text-white/40">
+														<span>Learn more</span>
+														<svg
+															class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															stroke-width="2"
+														>
+															<path
+																d="M5 12h14M12 5l7 7-7 7"
+																stroke-linecap="round"
+																stroke-linejoin="round"
+															/>
+														</svg>
+													</div>
+												</a>
+											{/each}
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div 
-			class="mobile-menu" 
-			class:active={isMobileMenuOpen} 
-			role="menu" 
-			aria-hidden="true"
-		>
-			<a href="https://docs.voi.network/" class="nav-btn" role="menuitem">Learn More</a>
-			<a href="https://ecosystem.voi.network/" class="nav-btn primary-btn" role="menuitem">Ecosystem Hub</a>
-		</div>
-	</nav>
+	{/if}
 
 	<!-- Main Content -->
 	<main class="pt-16">
@@ -69,24 +513,27 @@
 			<div class="footer-grid">
 				<!-- Logo & Social Section -->
 				<div class="brand-section">
-					<img src="/voi-logo.svg" alt="Voi Logo" class="footer-logo">
+					<img src="/voi-logo.svg" alt="Voi Logo" class="footer-logo" />
 					<div class="social-links">
 						<a href="https://discord.gg/vnFbrJrHeW" class="social-icon" data-tooltip="Discord">
 							<svg viewBox="0 0 24 24" fill="currentColor">
 								<path
-									d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.078.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.078-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" />
+									d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.078.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.078-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+								/>
 							</svg>
 						</a>
 						<a href="https://x.com/Voi_Net" class="social-icon" data-tooltip="Twitter">
 							<svg viewBox="0 0 24 24" fill="currentColor">
 								<path
-									d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+									d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+								/>
 							</svg>
 						</a>
 						<a href="https://github.com/VoiNetwork" class="social-icon" data-tooltip="GitHub">
 							<svg viewBox="0 0 24 24" fill="currentColor">
 								<path
-									d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+									d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+								/>
 							</svg>
 						</a>
 					</div>
@@ -100,8 +547,10 @@
 							Build on Voi
 							<span class="link-arrow">↗</span>
 						</a>
-						<a href="https://docs.voi.network/governance/proposals/product-build-grants/"
-							class="footer-link">
+						<a
+							href="https://docs.voi.network/governance/proposals/product-build-grants/"
+							class="footer-link"
+						>
 							Grant Program
 							<span class="link-arrow">↗</span>
 						</a>
@@ -124,14 +573,18 @@
 							Ecosystem
 							<span class="link-arrow">↗</span>
 						</a>
-						<a href="https://ecosystem.voi.network/" class="footer-link">Token
+						<a href="https://ecosystem.voi.network/" class="footer-link"
+							>Token
 							<span class="link-arrow">↗</span>
 						</a>
 						<a href="https://voifoundation.medium.com/" class="footer-link">
 							Blog
 							<span class="link-arrow">↗</span>
 						</a>
-						<a href="https://docs.voi.network/governance/proposals/service-grants/" class="footer-link">
+						<a
+							href="https://docs.voi.network/governance/proposals/service-grants/"
+							class="footer-link"
+						>
 							Careers
 							<span class="link-arrow">↗</span>
 						</a>
@@ -152,181 +605,30 @@
 		@apply bg-voi-dark;
 	}
 
-	.nav {
-		position: fixed;
-		width: 100%;
-		padding: 0.75rem 2rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		z-index: 100;
-		background: var(--voi-light);
+	.connection-line {
+		stroke-dasharray: 4;
+		animation: flow 1s linear infinite;
 	}
 
-	.logo {
-		display: flex;
-		align-items: center;
+	.connection-line.reverse-flow {
+		animation: reverse-flow 1s linear infinite;
 	}
 
-	.nav-logo {
-		height: 32px;
-		width: auto;
-	}
-
-	.nav-links {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-	}
-
-	.nav-btn {
-		padding: 0.5rem 1.5rem;
-		border-radius: 24px;
-		text-decoration: none;
-		font-weight: 500;
-		transition: all 0.2s ease;
-		color: white;
-		white-space: nowrap;
-		letter-spacing: -0.01em;
-		font-size: 0.9375rem;
-	}
-
-	.nav-btn.primary-btn {
-		background: white;
-		color: var(--voi-light);
-	}
-
-	.nav-btn.primary-btn:hover {
-		background: rgba(255, 255, 255, 0.9);
-	}
-
-	.nav-btn:not(.primary-btn):hover {
-		background: rgba(255, 255, 255, 0.1);
-	}
-
-	/* Hamburger Menu */
-	.hamburger {
-		display: none;
-		flex-direction: column;
-		justify-content: space-around;
-		width: 2rem;
-		height: 2rem;
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		z-index: 10;
-	}
-
-	.hamburger div {
-		width: 2rem;
-		height: 0.25rem;
-		background: white;
-		border-radius: 10px;
-		transition: all 0.3s linear;
-		position: relative;
-		transform-origin: 1px;
-	}
-
-	/* Hamburger Animation */
-	.hamburger div:first-child.open {
-		transform: rotate(45deg);
-	}
-
-	.hamburger div:nth-child(2).open {
-		opacity: 0;
-	}
-
-	.hamburger div:last-child.open {
-		transform: rotate(-45deg);
-	}
-
-	.mobile-menu {
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-		background: var(--voi-light);
-		padding: 2rem;
-		transform: translateX(-100%);
-		transition: transform 0.3s ease-in-out;
-	}
-
-	.mobile-menu.active {
-		transform: translateX(0);
-	}
-
-	@media (max-width: 768px) {
-		.nav {
-			padding: 0.75rem 1rem;
+	@keyframes flow {
+		from {
+			stroke-dashoffset: 8;
 		}
-
-		.nav-logo {
-			height: 28px;
-		}
-
-		.nav-links {
-			gap: 0.5rem;
-		}
-
-		.nav-btn {
-			padding: 0.5rem 1rem;
-			font-size: 0.9rem;
-		}
-
-		.nav-links {
-			display: none;
-		}
-
-		.hamburger {
-			display: flex;
-		}
-
-		.mobile-menu {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			gap: 2rem;
-		}
-
-		.mobile-menu .nav-btn {
-			font-size: 1.125rem;
-			padding: 1rem 2rem;
-			letter-spacing: -0.02em;
+		to {
+			stroke-dashoffset: 0;
 		}
 	}
 
-	@media (max-width: 480px) {
-		.nav-logo {
-			height: 24px;
+	@keyframes reverse-flow {
+		from {
+			stroke-dashoffset: 0;
 		}
-
-		.nav-links {
-			gap: 0.25rem;
-		}
-
-		.nav-btn {
-			padding: 0.4rem 0.75rem;
-			font-size: 0.85rem;
-		}
-	}
-
-	@media (max-width: 360px) {
-		.nav {
-			padding: 0.5rem;
-		}
-
-		.nav-links {
-			flex-wrap: wrap;
-			justify-content: flex-end;
-		}
-
-		.nav-btn {
-			padding: 0.35rem 0.6rem;
-			font-size: 0.8rem;
+		to {
+			stroke-dashoffset: 8;
 		}
 	}
 
@@ -459,33 +761,23 @@
 		transition: all 0.3s ease;
 	}
 
-	.social-icon:hover[data-tooltip]:before {
+	.social-icon[data-tooltip]:hover:before {
 		opacity: 1;
 		visibility: visible;
 		transform: translateX(-50%) translateY(-4px);
-	}
-
-	.footer-bottom {
-		border-top: 1px solid rgba(0, 0, 0, 0.1);
-		padding-top: 2rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		color: #666;
-		font-size: 0.9rem;
 	}
 
 	@media (max-width: 768px) {
 		.footer {
 			padding: 6rem 1.5rem 3rem;
 		}
-		
+
 		.footer-grid {
 			grid-template-columns: 1fr;
 			gap: 3rem;
 		}
 
-		.footer-nav, 
+		.footer-nav,
 		.brand-section {
 			padding-right: 0;
 		}
@@ -500,6 +792,125 @@
 			flex-direction: column;
 			gap: 1.5rem;
 			text-align: center;
+		}
+	}
+
+	/* Background Effects */
+	.bg-gradient-radial {
+		background: radial-gradient(
+			circle at center,
+			var(--tw-gradient-from) 0%,
+			var(--tw-gradient-via) 50%,
+			var(--tw-gradient-to) 100%
+		);
+	}
+
+	/* Stars Animation */
+	.stars-small,
+	.stars-medium,
+	.stars-large {
+		position: absolute;
+		inset: 0;
+		background: transparent;
+	}
+
+	.stars-small {
+		background-image: radial-gradient(
+				1px 1px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(1px 1px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(1px 1px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 200px 200px;
+		animation: twinkle 4s ease-in-out infinite alternate;
+		opacity: 0.3;
+	}
+
+	.stars-medium {
+		background-image: radial-gradient(
+				1.5px 1.5px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(1.5px 1.5px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(1.5px 1.5px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 300px 300px;
+		animation: twinkle 6s ease-in-out infinite alternate-reverse;
+		opacity: 0.2;
+	}
+
+	.stars-large {
+		background-image: radial-gradient(
+				2px 2px at var(--star-1) var(--star-2),
+				white 100%,
+				transparent 100%
+			),
+			radial-gradient(2px 2px at var(--star-3) var(--star-4), white 100%, transparent 100%),
+			radial-gradient(2px 2px at var(--star-5) var(--star-6), white 100%, transparent 100%);
+		background-size: 400px 400px;
+		animation: twinkle 8s ease-in-out infinite alternate;
+		opacity: 0.1;
+	}
+
+	/* Glowing Orbs */
+	.glow-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(60px);
+		opacity: 0.15;
+		animation: float 20s ease-in-out infinite;
+	}
+
+	.glow-orb-1 {
+		width: 300px;
+		height: 300px;
+		background: var(--voi-light);
+		top: 10%;
+		right: 15%;
+		animation-delay: -5s;
+	}
+
+	.glow-orb-2 {
+		width: 400px;
+		height: 400px;
+		background: var(--voi-light);
+		bottom: 15%;
+		left: 10%;
+		animation-delay: -10s;
+	}
+
+	.glow-orb-3 {
+		width: 250px;
+		height: 250px;
+		background: var(--voi-light);
+		top: 40%;
+		left: 25%;
+		animation-delay: -15s;
+	}
+
+	@keyframes twinkle {
+		0% {
+			opacity: 0.2;
+		}
+		100% {
+			opacity: 0.4;
+		}
+	}
+
+	@keyframes float {
+		0%,
+		100% {
+			transform: translate(0, 0);
+		}
+		25% {
+			transform: translate(10px, 10px);
+		}
+		50% {
+			transform: translate(-5px, 15px);
+		}
+		75% {
+			transform: translate(-15px, -5px);
 		}
 	}
 </style>
