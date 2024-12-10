@@ -24,7 +24,7 @@
 					Welcome to Voi, a revolutionary L1 blockchain designed to fulfill the promises of Web3. Voi is a highly performant network truly owned, run, and built by its community. We believe in the power of decentralization, governance, and ownership, making blockchain technology accessible and beneficial for all.
 				</p>
 
-				<div class="mt-8 grid gap-6 md:grid-cols-3">
+				<div class="mt-8 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
 					<div class="rounded-xl border border-white/10 bg-white/5 p-6">
 						<h3 class="mb-3 font-display text-xl">Built by You</h3>
 						<p class="text-sm text-white/60">
@@ -52,8 +52,8 @@
 		<!-- Performance Section -->
 		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
 			<div class="mb-6">
-				<h2 class="flex items-center gap-3 text-2xl">
-					<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<h2 class="flex items-center gap-3 text-2xl flex-wrap">
+					<svg class="h-6 w-6 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 					Highly Performant
@@ -61,7 +61,7 @@
 			</div>
 
 			<div class="prose prose-invert max-w-none">
-				<div class="grid gap-6 md:grid-cols-4">
+				<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
 					<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
 						<div class="font-display text-2xl font-bold text-voi-light">2.8s</div>
 						<div class="mt-2 text-sm text-white/60">Block Time</div>
@@ -103,7 +103,7 @@
 				<p class="mt-2 text-white/60">To ensure true decentralization, the Voi community adheres to these guiding values:</p>
 			</div>
 
-			<div class="grid gap-6 md:grid-cols-2">
+			<div class="grid gap-6 grid-cols-1 sm:grid-cols-2">
 				<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
 					<h3 class="mb-3 font-display text-xl text-voi-light">Goodwill</h3>
 					<p class="text-sm text-white/60">

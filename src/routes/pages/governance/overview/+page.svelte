@@ -8,9 +8,9 @@
 >
 	<div class="space-y-12">
 		<!-- Introduction -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
+		<section class="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8">
 			<div class="prose prose-invert max-w-none">
-				<p class="lead text-lg text-white/80">
+				<p class="lead text-base sm:text-lg text-white/80">
 					Voi's governance model is inspired by the tripartite system, adapted to create a truly
 					decentralized, community-driven blockchain. This system ensures equitable distribution of
 					power through three distinct branches, each with specific responsibilities and checks on
@@ -20,13 +20,13 @@
 		</section>
 
 		<!-- Governance Branches -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
-			<h2 class="mb-6 text-2xl font-bold">Governance Structure</h2>
-			<div class="grid gap-6 md:grid-cols-3">
+		<section class="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8">
+			<h2 class="mb-4 sm:mb-6 text-2xl font-bold">Governance Structure</h2>
+			<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
 				<!-- Council -->
-				<div class="rounded-xl border border-purple-400/20 bg-purple-400/5 p-6">
+				<div class="rounded-xl border border-purple-400/20 bg-purple-400/5 p-4 sm:p-6">
 					<div class="mb-4">
-						<h3 class="font-display text-xl text-purple-200">Voi Council</h3>
+						<h3 class="font-display text-lg sm:text-xl text-purple-200">Voi Council</h3>
 						<div class="mt-1 text-sm text-purple-200/60">Legislative Branch</div>
 					</div>
 					<ul class="mt-4 space-y-2 text-sm text-white/80">
@@ -94,9 +94,9 @@
 				</div>
 
 				<!-- Treasury -->
-				<div class="rounded-xl border border-blue-400/20 bg-blue-400/5 p-6">
+				<div class="rounded-xl border border-blue-400/20 bg-blue-400/5 p-4 sm:p-6">
 					<div class="mb-4">
-						<h3 class="font-display text-xl text-blue-200">Voi Treasury</h3>
+						<h3 class="font-display text-lg sm:text-xl text-blue-200">Voi Treasury</h3>
 						<div class="mt-1 text-sm text-blue-200/60">Executive Branch</div>
 					</div>
 					<ul class="mt-4 space-y-2 text-sm text-white/80">
@@ -164,9 +164,9 @@
 				</div>
 
 				<!-- Judiciary -->
-				<div class="rounded-xl border border-green-400/20 bg-green-400/5 p-6">
+				<div class="rounded-xl border border-green-400/20 bg-green-400/5 p-4 sm:p-6">
 					<div class="mb-4">
-						<h3 class="font-display text-xl text-green-200">Voi Judiciary</h3>
+						<h3 class="font-display text-lg sm:text-xl text-green-200">Voi Judiciary</h3>
 						<div class="mt-1 text-sm text-green-200/60">Judicial Branch</div>
 					</div>
 					<ul class="mt-4 space-y-2 text-sm text-white/80">
@@ -237,9 +237,9 @@
 
 		<!-- Checks and Balances -->
 		<section
-			class="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-8"
+			class="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-4 sm:p-8"
 		>
-			<div class="flex items-center gap-4">
+			<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
 				<div class="flex-shrink-0">
 					<div class="rounded-full border border-white/10 bg-white/5 p-3">
 						<svg

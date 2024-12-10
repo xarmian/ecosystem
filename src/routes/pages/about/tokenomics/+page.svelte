@@ -43,7 +43,7 @@
 				</div>
 
 				<!-- Other Categories in single row -->
-				<div class="grid grid-cols-3 gap-6">
+				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					<div class="flex flex-col rounded-xl border border-yellow-400/20 bg-yellow-400/5 p-6">
 						<div class="flex items-center justify-between">
 							<h3 class="font-display text-xl text-yellow-300">Team</h3>
@@ -91,29 +91,29 @@
 					<h3 class="font-display text-xl text-purple-200">Community Distribution (75%)</h3>
 				</div>
 				<div class="divide-y divide-white/5">
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-purple-200">Block Rewards</div>
 						<div class="text-purple-200/60">10%</div>
 						<div class="text-purple-200/60">1,000,000,000</div>
-						<div class="text-right text-purple-200/60">240 months vesting</div>
+						<div class="text-left lg:text-right text-purple-200/60">240 months vesting</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-purple-200">Early</div>
 						<div class="text-purple-200/60">15%</div>
 						<div class="text-purple-200/60">1,500,000,000</div>
-						<div class="text-right text-purple-200/60">No lock</div>
+						<div class="text-left lg:text-right text-purple-200/60">No lock</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-purple-200">Mid</div>
 						<div class="text-purple-200/60">30%</div>
 						<div class="text-purple-200/60">3,000,000,000</div>
-						<div class="text-right text-purple-200/60">60 months vesting</div>
+						<div class="text-left lg:text-right text-purple-200/60">60 months vesting</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-purple-200">Late</div>
 						<div class="text-purple-200/60">20%</div>
 						<div class="text-purple-200/60">2,000,000,000</div>
-						<div class="text-right text-purple-200/60">60 month lock, 120 months vesting</div>
+						<div class="text-left lg:text-right text-purple-200/60">60 month lock, 120 months vesting</div>
 					</div>
 				</div>
 			</div>
@@ -124,11 +124,11 @@
 					<h3 class="font-display text-xl text-yellow-200">Team (10%)</h3>
 				</div>
 				<div class="divide-y divide-white/5">
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-yellow-200">Team Allocation</div>
 						<div class="text-yellow-200/60">10%</div>
 						<div class="text-yellow-200/60">1,000,000,000</div>
-						<div class="text-right text-yellow-200/60">24 month lock, 36 months vesting</div>
+						<div class="text-left lg:text-right text-yellow-200/60">24 month lock, 36 months vesting</div>
 					</div>
 				</div>
 			</div>
@@ -139,23 +139,23 @@
 					<h3 class="font-display text-xl text-orange-200">Investors (1.73%)</h3>
 				</div>
 				<div class="divide-y divide-white/5">
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-orange-200">Private Round</div>
 						<div class="text-orange-200/60">0.56%</div>
 						<div class="text-orange-200/60">56,000,000</div>
-						<div class="text-right text-orange-200/60">24 month lock, 36 months vesting</div>
+						<div class="text-left lg:text-right text-orange-200/60">24 month lock, 36 months vesting</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-orange-200">Pre-Seed</div>
 						<div class="text-orange-200/60">1.01%</div>
 						<div class="text-orange-200/60">100,800,000</div>
-						<div class="text-right text-orange-200/60">24 month lock, 36 months vesting</div>
+						<div class="text-left lg:text-right text-orange-200/60">24 month lock, 36 months vesting</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-orange-200">Seed</div>
 						<div class="text-orange-200/60">0.16%</div>
 						<div class="text-orange-200/60">16,000,000</div>
-						<div class="text-right text-orange-200/60">12 month lock and vesting</div>
+						<div class="text-left lg:text-right text-orange-200/60">12 month lock and vesting</div>
 					</div>
 				</div>
 			</div>
@@ -166,23 +166,23 @@
 					<h3 class="font-display text-xl text-green-200">Treasury Distribution (13.27%)</h3>
 				</div>
 				<div class="divide-y divide-white/5">
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-green-200">Early</div>
 						<div class="text-green-200/60">3.27%</div>
 						<div class="text-green-200/60">327,200,000</div>
-						<div class="text-right text-green-200/60">No lock</div>
+						<div class="text-left lg:text-right text-green-200/60">No lock</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-green-200">Mid</div>
 						<div class="text-green-200/60">5%</div>
 						<div class="text-green-200/60">500,000,000</div>
-						<div class="text-right text-green-200/60">24 month lock</div>
+						<div class="text-left lg:text-right text-green-200/60">24 month lock</div>
 					</div>
-					<div class="grid grid-cols-4 px-6 py-4">
+					<div class="grid grid-cols-2 gap-4 px-6 py-4 lg:grid-cols-4">
 						<div class="font-medium text-green-200">Late</div>
 						<div class="text-green-200/60">5%</div>
 						<div class="text-green-200/60">500,000,000</div>
-						<div class="text-right text-green-200/60">60 month lock</div>
+						<div class="text-left lg:text-right text-green-200/60">60 month lock</div>
 					</div>
 				</div>
 			</div>
@@ -190,7 +190,7 @@
 
 		<!-- Governance Note -->
 		<section class="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-8">
-			<div class="flex items-center gap-4">
+			<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4">
 				<div class="flex-shrink-0">
 					<div class="rounded-full border border-white/10 bg-white/5 p-3">
 						<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
