@@ -6,15 +6,14 @@
 	};
 </script>
 
-<SubSectionTemplate
-	title="Node Running"
-	description="Earn rewards by securing the network"
->
+<SubSectionTemplate title="Node Running" description="Earn rewards by securing the network">
 	<!-- Introduction -->
 	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
 		<div class="prose prose-invert max-w-none">
 			<p class="text-lg text-white/80">
-				Participate in Voi's network security by running a node and earn rewards from the 1 billion $VOI block reward allocation. Rewards are distributed weekly based on your node's block production.
+				Participate in Voi's network security by running a node and earn rewards from the 1 billion
+				$VOI block reward allocation. Rewards are distributed weekly based on your node's block
+				production.
 			</p>
 		</div>
 	</div>
@@ -35,11 +34,15 @@
 			</a>
 		</div>
 		<div class="mt-6">
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6"
+			>
 				<div class="flex items-center justify-between">
 					<div class="font-mono text-sm">
 						<span class="text-white/60">$</span>
-						<span class="text-purple-400">/bin/bash -c "$(curl -fsSL https://get.voi.network/swarm)"</span>
+						<span class="text-purple-400"
+							>/bin/bash -c "$(curl -fsSL https://get.voi.network/swarm)"</span
+						>
 					</div>
 					<button
 						on:click={copyCommand}
@@ -66,7 +69,9 @@
 	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
 		<h2 class="text-2xl font-bold">Block Rewards</h2>
 		<div class="mt-6 grid gap-6 md:grid-cols-2">
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">Current Rewards</h3>
 				<ul class="mt-4 space-y-3 text-white/80">
 					<li class="flex items-start gap-2">
@@ -117,7 +122,9 @@
 				</ul>
 			</div>
 
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">Distribution Schedule</h3>
 				<ul class="mt-4 space-y-3 text-white/80">
 					<li class="flex items-start gap-2">
@@ -171,11 +178,18 @@
 	</div>
 
 	<!-- Track Your Rewards -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8">
+	<div
+		class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8"
+	>
 		<div class="flex items-center gap-4">
 			<div class="flex-shrink-0">
 				<div class="rounded-full border border-purple-400/20 bg-purple-400/10 p-3">
-					<svg class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<svg
+						class="h-6 w-6 text-purple-400"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+					>
 						<path
 							d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
 							stroke-linecap="round"
@@ -222,21 +236,31 @@
 				</svg>
 			</a>
 		</div>
-		<p class="mt-4 text-white/80">Running a Voi node has minimal hardware requirements, making it accessible to most users:</p>
+		<p class="mt-4 text-white/80">
+			Running a Voi node has minimal hardware requirements, making it accessible to most users:
+		</p>
 		<div class="mt-6 grid gap-6 md:grid-cols-4">
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">CPU</h3>
 				<p class="mt-2 text-sm text-white/60">8 vCPUs</p>
 			</div>
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">Memory</h3>
 				<p class="mt-2 text-sm text-white/60">8GB RAM</p>
 			</div>
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">Storage</h3>
 				<p class="mt-2 text-sm text-white/60">100GB</p>
 			</div>
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
+			>
 				<h3 class="font-display text-xl">Network</h3>
 				<p class="mt-2 text-sm text-white/60">100 Mbps</p>
 			</div>
@@ -244,11 +268,18 @@
 	</div>
 
 	<!-- Staking Flexibility -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8">
+	<div
+		class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8"
+	>
 		<div class="flex items-center gap-4">
 			<div class="flex-shrink-0">
 				<div class="rounded-full border border-purple-400/20 bg-purple-400/10 p-3">
-					<svg class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<svg
+						class="h-6 w-6 text-purple-400"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+					>
 						<path
 							d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
 							stroke-linecap="round"
@@ -260,37 +291,148 @@
 			<div>
 				<h3 class="font-display text-xl">Flexible Staking Options</h3>
 				<p class="mt-2 text-white/80">
-					Stake your tokens with complete flexibility - no lockup period required. You can stake any account on a node, and even use Node as a Service providers who will stake your account on their node for a fee.
+					Stake your tokens with complete flexibility - no lockup period required. You can stake any
+					account on a node, and even use Node as a Service providers who will stake your account on
+					their node for a fee.
 				</p>
 			</div>
 		</div>
 	</div>
 
-	<!-- Community Software -->
+	<!-- Node Running Options -->
 	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
-		<h2 class="text-2xl font-bold">Running Options</h2>
+		<h2 class="text-2xl font-bold">Node Running Options</h2>
 		<div class="mt-6 grid gap-6 md:grid-cols-2">
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
-				<h3 class="font-display text-xl">Official Software</h3>
+			<!-- Official Documentation -->
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6"
+			>
+				<div class="mb-4 w-fit rounded-lg bg-purple-400/10 p-2">
+					<svg
+						class="h-5 w-5 text-purple-400"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+					>
+						<path
+							d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</div>
+				<h3 class="font-display text-xl">Official Documentation</h3>
 				<p class="mt-2 text-white/80">
-					Voi Swarm provides a streamlined installation process and is officially maintained by the Voi team.
+					Follow our official documentation to set up and run your node using Voi Swarm.
 				</p>
+				<div class="mt-4">
+					<a
+						href="https://voinetwork.github.io/voi-swarm/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						View Documentation
+						<svg
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</a>
+				</div>
 			</div>
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
-				<h3 class="font-display text-xl">Community Software</h3>
+
+			<!-- Community Solutions -->
+			<div
+				class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6"
+			>
+				<div class="mb-4 w-fit rounded-lg bg-purple-400/10 p-2">
+					<svg
+						class="h-5 w-5 text-purple-400"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+					>
+						<path
+							d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</div>
+				<h3 class="font-display text-xl">Community Solutions</h3>
 				<p class="mt-2 text-white/80">
-					Run nodes from your local machine using alternative software developed and maintained by the Voi community.
+					Try community-maintained alternatives for running nodes on your local machine.
 				</p>
+				<div class="mt-4 space-y-3">
+					<a
+						href="https://github.com/AustP/austs-one-click-node"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						A1CN
+						<svg
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</a>
+					<a
+						href="https://github.com/GalaxyPay/func"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						Func
+						<svg
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Support -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8">
+	<div
+		class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8"
+	>
 		<div class="flex items-center gap-4">
 			<div class="flex-shrink-0">
 				<div class="rounded-full border border-purple-400/20 bg-purple-400/10 p-3">
-					<svg class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+					<svg
+						class="h-6 w-6 text-purple-400"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+					>
 						<path
 							d="M17 8H19C20.1046 8 21 8.89543 21 10V16C21 17.1046 20.1046 18 19 18H17V22L13 18H8C6.89543 18 6 17.1046 6 16V15M13 3H5C3.89543 3 3 3.89543 3 5V11C3 12.1046 3.89543 13 5 13H11L15 17V13H17C18.1046 13 19 12.1046 19 11V5C19 3.89543 18.1046 3 17 3H13Z"
 							stroke-linecap="round"
@@ -302,7 +444,8 @@
 			<div>
 				<h3 class="font-display text-xl">Need Help?</h3>
 				<p class="mt-2 text-white/80">
-					Join our dedicated node runners support channel on Discord for assistance and community support.
+					Join our dedicated node runners support channel on Discord for assistance and community
+					support.
 				</p>
 				<a
 					href="https://discord.com/channels/1055863853633785857/1128672413048115250"
@@ -390,4 +533,4 @@
 			</div>
 		</a>
 	</svelte:fragment>
-</SubSectionTemplate> 
+</SubSectionTemplate>
