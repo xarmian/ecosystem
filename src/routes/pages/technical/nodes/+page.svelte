@@ -14,52 +14,6 @@
 		</div>
 	</div>
 
-	<!-- Documentation Link -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8">
-		<div class="flex items-center gap-4">
-			<div class="flex-shrink-0">
-				<div class="rounded-full border border-purple-400/20 bg-purple-400/10 p-3">
-					<svg class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path
-							d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</div>
-			</div>
-			<div>
-				<h3 class="font-display text-xl">Voi Swarm Documentation</h3>
-				<p class="mt-2 text-white/80">
-					Access our detailed node documentation to learn about setup, maintenance, and best practices.
-				</p>
-				<div class="mt-4">
-					<a
-						href="https://voinetwork.github.io/voi-swarm/"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
-					>
-						View Documentation
-						<svg
-							class="h-4 w-4"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-						>
-							<path
-								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-						</svg>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<!-- Node Types -->
 	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
 		<h2 class="text-2xl font-bold">Node Types</h2>
@@ -192,6 +146,86 @@
 						Block production
 					</li>
 				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- Resources -->
+	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
+		<h2 class="text-2xl font-bold">Important Information</h2>
+		<div class="mt-6 grid gap-6 md:grid-cols-3">
+			<!-- Quick Start -->
+			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6">
+				<div class="mb-4 rounded-lg bg-purple-400/10 p-2 w-fit">
+					<svg class="h-5 w-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+				<h3 class="font-display text-xl">Quick Start</h3>
+				<p class="mt-2 text-white/80">
+					Get started with running your first node on the Voi network.
+				</p>
+				<div class="mt-4">
+					<a
+						href="/pages/getting-started/node-runners"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						Start Running
+						<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+
+			<!-- Documentation -->
+			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6">
+				<div class="mb-4 rounded-lg bg-purple-400/10 p-2 w-fit">
+					<svg class="h-5 w-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+				<h3 class="font-display text-xl">Documentation</h3>
+				<p class="mt-2 text-white/80">
+					Access detailed node documentation and setup guides.
+				</p>
+				<div class="mt-4">
+					<a
+						href="https://voinetwork.github.io/voi-swarm/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						View Docs
+						<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+
+			<!-- Rewards -->
+			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-6">
+				<div class="mb-4 rounded-lg bg-purple-400/10 p-2 w-fit">
+					<svg class="h-5 w-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+				<h3 class="font-display text-xl">Rewards</h3>
+				<p class="mt-2 text-white/80">
+					Learn about the rewards available for running a node.
+				</p>
+				<div class="mt-4">
+					<a
+						href="/pages/rewards/node-running"
+						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
+					>
+						View Rewards
+						<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
