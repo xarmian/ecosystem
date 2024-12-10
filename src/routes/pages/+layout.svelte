@@ -2,6 +2,7 @@
 	import '../../app.css';
 	import { fade, scale, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import NavButton from '$lib/components/NavButton.svelte';
 
 	let isNavPanelOpen = false;
 
@@ -190,48 +191,14 @@
 </script>
 
 <div class="min-h-screen bg-voi-dark text-white">
-	<!-- Navigation Toggle Button (Mobile Only) -->
-	<button
-		class="fixed right-4 top-4 z-[60] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:bg-white/20 md:hidden"
-		on:click={toggleNavPanel}
-		aria-label="Toggle navigation"
-	>
-		<div class="relative flex h-5 w-5 items-center justify-center">
-			<div
-				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
-				style:transform="rotate({isNavPanelOpen ? '45deg' : '0'}) translateY({isNavPanelOpen
-					? '0'
-					: '-6px'})"
-			></div>
-			<div
-				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
-				style:opacity={isNavPanelOpen ? '0' : '1'}
-			></div>
-			<div
-				class="absolute h-0.5 w-5 transform bg-white transition-all duration-300"
-				style:transform="rotate({isNavPanelOpen ? '-45deg' : '0'}) translateY({isNavPanelOpen
-					? '0'
-					: '6px'})"
-			></div>
-		</div>
-	</button>
-
-	<!-- Navigation Toggle Button (Desktop Only) -->
-	<button
-		class="fixed right-4 top-4 z-[60] hidden h-12 items-center justify-center rounded-full bg-white/10 px-6 backdrop-blur-md transition-all hover:bg-white/20 md:flex min-w-[100px]"
-		on:click={toggleNavPanel}
-		aria-label="Toggle ecosystem navigation"
-	>
-		<span class="font-display text-sm font-medium text-white">
-			{isNavPanelOpen ? 'Close' : 'Portal'}
-		</span>
-	</button>
+	<!-- Navigation Toggle Button -->
+	<NavButton isOpen={isNavPanelOpen} on:click={toggleNavPanel} />
 
 	<!-- Navigation Panel -->
 	{#if isNavPanelOpen}
 		<div
 			class="fixed inset-0 z-50 bg-voi-dark"
-			transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
+				transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
 		>
 			<!-- Background Effects -->
 			<div class="absolute inset-0 overflow-hidden">
