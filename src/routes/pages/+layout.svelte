@@ -83,7 +83,8 @@
             </svg>`,
 			subSections: {
 				users: { title: 'For Users', description: 'Getting Setup' },
-				developers: { title: 'For Developers', description: 'Start Building' }
+				developers: { title: 'For Developers', description: 'Start Building' },
+				'node-runners': { title: 'For Node Runners', description: 'Earn Block Rewards' }
 			}
 		},
 		about: {
@@ -309,11 +310,13 @@
 											<div class="grid gap-4 p-4">
 												{#each Object.entries(section.subSections) as [subKey, subSection]}
 													<a
-														href="/pages/{key
-															.toLowerCase()
-															.replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+														href={key === 'getting-started' && subKey === 'node-runners'
+															? '/pages/rewards/node-running'
+															: `/pages/${key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
 														class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 														on:click={closeNavPanel}
+														on:mouseenter={() => handleSectionHover(key, true)}
+														on:mouseleave={() => handleSectionHover(key, false)}
 													>
 														<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
 														<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
@@ -326,11 +329,7 @@
 																stroke="currentColor"
 																stroke-width="2"
 															>
-																<path
-																	d="M5 12h14M12 5l7 7-7 7"
-																	stroke-linecap="round"
-																	stroke-linejoin="round"
-																/>
+																<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
 															</svg>
 														</div>
 													</a>
@@ -497,11 +496,13 @@
 										<div class="grid gap-4">
 											{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
 												<a
-													href="/pages/{activeSection
-														.toLowerCase()
-														.replace(/([a-z])([A-Z])/g, '$1-$2')}/{subKey.toLowerCase()}"
+													href={activeSection === 'getting-started' && subKey === 'node-runners'
+														? '/pages/rewards/node-running'
+														: `/pages/${activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
 													class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
 													on:click={closeNavPanel}
+													on:mouseenter={() => handleSectionHover(activeSection, true)}
+													on:mouseleave={() => handleSectionHover(activeSection, false)}
 												>
 													<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
 													<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
@@ -514,11 +515,7 @@
 															stroke="currentColor"
 															stroke-width="2"
 														>
-															<path
-																d="M5 12h14M12 5l7 7-7 7"
-																stroke-linecap="round"
-																stroke-linejoin="round"
-															/>
+															<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
 														</svg>
 													</div>
 												</a>
