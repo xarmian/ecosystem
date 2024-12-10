@@ -510,6 +510,112 @@
 			</div>
 		</section>
 
+		<!-- Get Tokens Section -->
+		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
+			<div class="mb-6">
+				<h2 class="flex items-center gap-3 text-2xl">
+					<svg
+						class="h-6 w-6"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M8 9L12 15L16 9" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					5. Get Tokens
+				</h2>
+				<p class="mt-2 text-white/60">Get tokens for development and deployment</p>
+			</div>
+
+			<div class="space-y-6">
+				<!-- Testnet Section -->
+				<div class="rounded-xl border border-white/10 bg-white/5 p-6">
+					<h3 class="mb-4 font-display text-xl">Testnet</h3>
+					<div class="grid gap-4 md:grid-cols-2">
+						<a
+							href="https://testnet.voifaucet.com"
+							target="_blank"
+							rel="noopener"
+							class="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6 transition-all hover:scale-[1.02] hover:border-purple-400/20 hover:bg-purple-400/10"
+						>
+							<h3 class="font-display text-xl font-bold text-purple-400 group-hover:text-purple-300">Testnet Faucet</h3>
+							<p class="mt-2 font-mono text-sm text-white/60">
+								Get free testnet tokens to develop and test your applications.
+							</p>
+							<div class="mt-4 flex items-center font-mono text-sm text-white/40 group-hover:text-purple-400/60">
+								<span>Get Tokens</span>
+								<svg
+									class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</div>
+						</a>
+					</div>
+				</div>
+
+				<!-- Mainnet Section -->
+				<div class="rounded-xl border border-white/10 bg-white/5 p-6">
+					<h3 class="mb-4 font-display text-xl">Mainnet</h3>
+					<div class="grid gap-4 md:grid-cols-2">
+						<a
+							href="https://fountain.voirewards.com"
+							target="_blank"
+							rel="noopener"
+							class="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6 transition-all hover:scale-[1.02] hover:border-purple-400/20 hover:bg-purple-400/10"
+						>
+							<h3 class="font-display text-xl font-bold text-purple-400 group-hover:text-purple-300">Quick Start (Fountain)</h3>
+							<p class="mt-2 font-mono text-sm text-white/60">
+								Get a small amount of tokens from the community fountain to get started.
+							</p>
+							<div class="mt-4 flex items-center font-mono text-sm text-white/40 group-hover:text-purple-400/60">
+								<span>Visit Fountain</span>
+								<svg
+									class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</div>
+						</a>
+
+						<a
+							href="https://www.mexc.com/exchange/VOI_USDT"
+							target="_blank"
+							rel="noopener"
+							class="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6 transition-all hover:scale-[1.02] hover:border-purple-400/20 hover:bg-purple-400/10"
+						>
+							<h3 class="font-display text-xl font-bold text-purple-400 group-hover:text-purple-300">Buy Tokens</h3>
+							<p class="mt-2 font-mono text-sm text-white/60">
+								Purchase VOI tokens from MEXC exchange for production deployment.
+							</p>
+							<div class="mt-4 flex items-center font-mono text-sm text-white/40 group-hover:text-purple-400/60">
+								<span>Trade on MEXC</span>
+								<svg
+									class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<!-- Help Section -->
 		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
 			<div class="mb-6">
