@@ -1,151 +1,122 @@
 <script lang="ts">
 	import SubSectionTemplate from '$lib/components/SubSectionTemplate.svelte';
+	import { projects } from '$lib/data/projects';
 	import { onMount } from 'svelte';
 
-	// Project categories
-	const categories = ['All', 'DeFi', 'NFT', 'Gaming', 'Infrastructure', 'Tools', 'Community'];
-	let selectedCategory = 'All';
-
-	// Status options
-	const statuses = ['All', 'Live', 'Beta', 'Development'];
-	let selectedStatus = 'All';
-
-	// Sample projects data (to be replaced with real data)
-	let projects = [
-		{
-			name: 'Sample DeFi Project',
-			logo: '/images/projects/sample-logo.png', // Path to project logo
-			description: 'A decentralized exchange built on Voi.',
-			category: 'DeFi',
-			status: 'Beta',
-			labels: ['DEX', 'AMM', 'Liquidity'],
-			website: 'https://example.com',
-			twitter: 'https://twitter.com/example',
-			discord: 'https://discord.gg/example',
-			github: 'https://github.com/example'
-		}
-		// More projects will be added here
-	];
-
-	let filteredProjects = projects;
-
-	// Filter function
-	$: {
-		filteredProjects = projects.filter((project) => {
-			const categoryMatch =
-				selectedCategory === 'All' || project.category === selectedCategory;
-			const statusMatch = selectedStatus === 'All' || project.status === selectedStatus;
-			return categoryMatch && statusMatch;
+	// Get unique project types for filter, with type safety
+	const getUniqueTypes = () => {
+		const types = new Set(['All']);
+		projects.forEach(project => {
+			if (project.type) {
+				types.add(project.type);
+			}
 		});
+		return Array.from(types);
+	};
+
+	const projectTypes = getUniqueTypes();
+	const statuses = ['All', 'active', 'inactive'] as const;
+	
+	let selectedType = 'All';
+	let selectedStatus = 'All';
+	let filteredProjects = [...projects];
+
+	// Filter projects based on selected type and status
+	$: {
+		try {
+			filteredProjects = projects.filter((project) => {
+				const typeMatch = selectedType === 'All' || project.type === selectedType;
+				const statusMatch = selectedStatus === 'All' || project.status === selectedStatus;
+				return typeMatch && statusMatch;
+			});
+		} catch (error) {
+			console.error('Error filtering projects:', error);
+			filteredProjects = [...projects];
+		}
 	}
 </script>
 
-<SubSectionTemplate title="Project Directory" description="Explore projects in the Voi ecosystem">
-	<!-- Introduction -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
-		<div class="prose prose-invert max-w-none">
-			<p class="text-lg text-white/80">
-				Discover the diverse range of projects building on Voi. From DeFi protocols to NFT marketplaces,
-				explore what's being built and find opportunities to contribute.
-			</p>
-		</div>
-	</div>
-
+<SubSectionTemplate title="Project Directory" description="Browse all projects in the ecosystem">
 	<!-- Filters -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
-		<div class="flex flex-wrap items-center gap-6">
-			<!-- Category Filter -->
-			<div class="flex flex-col gap-2">
-				<label class="text-sm text-white/60">Category</label>
-				<div class="flex flex-wrap gap-2">
-					{#each categories as category}
-						<button
-							class="rounded-full border px-4 py-2 text-sm transition-all {selectedCategory === category
-								? 'border-purple-400 bg-purple-400/10 text-purple-400'
-								: 'border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:bg-white/10'}"
-							on:click={() => (selectedCategory = category)}
-						>
-							{category}
-						</button>
-					{/each}
-				</div>
-			</div>
+	<div class="mt-10 flex flex-wrap gap-4">
+		<div class="flex flex-col gap-2">
+			<label for="type-filter" class="text-sm font-semibold text-white/60">Type</label>
+			<select
+				id="type-filter"
+				bind:value={selectedType}
+				class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white/80"
+			>
+				{#each projectTypes as type}
+					<option value={type}>{type}</option>
+				{/each}
+			</select>
+		</div>
 
-			<!-- Status Filter -->
-			<div class="flex flex-col gap-2">
-				<label class="text-sm text-white/60">Status</label>
-				<div class="flex flex-wrap gap-2">
-					{#each statuses as status}
-						<button
-							class="rounded-full border px-4 py-2 text-sm transition-all {selectedStatus === status
-								? 'border-purple-400 bg-purple-400/10 text-purple-400'
-								: 'border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:bg-white/10'}"
-							on:click={() => (selectedStatus = status)}
-						>
-							{status}
-						</button>
-					{/each}
-				</div>
-			</div>
+		<div class="flex flex-col gap-2">
+			<label for="status-filter" class="text-sm font-semibold text-white/60">Status</label>
+			<select
+				id="status-filter"
+				bind:value={selectedStatus}
+				class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white/80"
+			>
+				{#each statuses as status}
+					<option value={status}>{status}</option>
+				{/each}
+			</select>
 		</div>
 	</div>
 
 	<!-- Project List -->
-	<div class="mt-10 grid gap-6 md:grid-cols-2">
-		{#each filteredProjects as project}
-			<div class="rounded-2xl border border-white/10 bg-white/5 p-6">
-				<div class="flex items-start gap-4">
+	<div class="mt-10 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
+		{#each filteredProjects as project (project.id)}
+			<div class="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6">
+				<div class="flex flex-col sm:flex-row sm:items-start gap-4">
 					<!-- Logo -->
 					<div class="flex-shrink-0">
-						<img
-							src={project.logo}
-							alt={`${project.name} logo`}
-							class="h-12 w-12 rounded-xl border border-white/10 bg-white/5"
-						/>
+						{#if project.logo}
+							<img
+								src={project.logo}
+								alt={`${project.title} logo`}
+								class="h-12 w-12 rounded-xl border border-white/10 bg-white/5 object-contain"
+							/>
+						{:else}
+							<div class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+								<svg class="h-6 w-6 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+						{/if}
 					</div>
 
 					<div class="flex-grow">
 						<!-- Header -->
-						<div class="flex items-start justify-between">
+						<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
 							<div>
-								<h3 class="font-display text-xl">{project.name}</h3>
+								<h3 class="font-display text-xl">{project.title}</h3>
 								<p class="mt-2 text-white/80">{project.description}</p>
 							</div>
 						</div>
 
 						<!-- Labels -->
 						<div class="mt-4 flex flex-wrap gap-2">
-							<span
-								class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-400"
-								>{project.status}</span
-							>
-							<span
-								class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60"
-								>{project.category}</span
-							>
-							{#each project.labels as label}
-								<span
-									class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60"
-									>{label}</span
-								>
-							{/each}
+							{#if project.new}
+								<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-400">New</span>
+							{/if}
+							<span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60">{project.type}</span>
 						</div>
 
 						<!-- Links -->
-						<div class="mt-4 flex flex-wrap items-center gap-3">
-							{#if project.website}
+						<div class="mt-4 flex flex-wrap items-center gap-2">
+							{#if project.url}
 								<a
-									href={project.website}
+									href={project.url}
 									target="_blank"
 									rel="noopener noreferrer"
 									class="rounded-lg border border-white/10 bg-white/5 p-2 text-white/60 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white/80"
+									title="Visit Website"
 								>
 									<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-										<path
-											d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0a9 9 0 100-18 9 9 0 000 18zM3.6 9h16.8M3.6 15h16.8"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
+										<path d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0a9 9 0 100-18 9 9 0 000 18zM3.6 9h16.8M3.6 15h16.8" stroke-linecap="round" stroke-linejoin="round"/>
 									</svg>
 								</a>
 							{/if}
@@ -155,60 +126,10 @@
 									target="_blank"
 									rel="noopener noreferrer"
 									class="rounded-lg border border-white/10 bg-white/5 p-2 text-white/60 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white/80"
+									title="Follow on X (Twitter)"
 								>
 									<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-										<path
-											d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								</a>
-							{/if}
-							{#if project.discord}
-								<a
-									href={project.discord}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="rounded-lg border border-white/10 bg-white/5 p-2 text-white/60 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white/80"
-								>
-									<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-										<path
-											d="M8.5 12C8.5 12.8284 7.82843 13.5 7 13.5C6.17157 13.5 5.5 12.8284 5.5 12C5.5 11.1716 6.17157 10.5 7 10.5C7.82843 10.5 8.5 11.1716 8.5 12Z"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-										<path
-											d="M17.5 12C17.5 12.8284 16.8284 13.5 16 13.5C15.1716 13.5 14.5 12.8284 14.5 12C14.5 11.1716 15.1716 10.5 16 10.5C16.8284 10.5 17.5 11.1716 17.5 12Z"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-										<path
-											d="M20 21C20 21 18.5 19.5 18.5 19.5C18.5 19.5 19.5 22 16.5 22H7.5C4.5 22 5.5 19.5 5.5 19.5L4 21"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-										<path
-											d="M12 17C14.5 17 16.5 15.5 16.5 15.5L19.5 16V8L16.5 7C15 5.5 13 5 12 5C11 5 9 5.5 7.5 7L4.5 8V16L7.5 15.5C7.5 15.5 9.5 17 12 17Z"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								</a>
-							{/if}
-							{#if project.github}
-								<a
-									href={project.github}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="rounded-lg border border-white/10 bg-white/5 p-2 text-white/60 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white/80"
-								>
-									<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-										<path
-											d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
+										<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" stroke-linecap="round" stroke-linejoin="round"/>
 									</svg>
 								</a>
 							{/if}
@@ -219,50 +140,6 @@
 		{/each}
 	</div>
 
-	<!-- Submit Project -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-400/10 to-transparent p-8">
-		<div class="flex items-center gap-4">
-			<div class="flex-shrink-0">
-				<div class="rounded-full border border-purple-400/20 bg-purple-400/10 p-3">
-					<svg class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-						<path
-							d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</div>
-			</div>
-			<div>
-				<h3 class="font-display text-xl">Submit Your Project</h3>
-				<p class="mt-2 text-white/80">
-					Building something on Voi? Submit your project to be featured in our directory.
-				</p>
-				<div class="mt-4">
-					<a
-						href="/pages/funding/grants"
-						class="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-400 transition-colors hover:bg-purple-400/20"
-					>
-						Apply for Funding
-						<svg
-							class="h-4 w-4"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-						>
-							<path
-								d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-						</svg>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<svelte:fragment slot="related">
 		<a
 			href="/pages/projects/featured"
@@ -270,18 +147,12 @@
 		>
 			<h3 class="font-display text-xl font-bold">Featured Projects</h3>
 			<p class="mt-2 font-mono text-sm text-white/60">
-				Discover highlighted projects in the ecosystem.
+				Discover highlighted projects.
 			</p>
 			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
 				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+				<svg class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 			</div>
 		</a>
@@ -296,14 +167,8 @@
 			</p>
 			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
 				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+				<svg class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 			</div>
 		</a>
@@ -318,14 +183,8 @@
 			</p>
 			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
 				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+				<svg class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 			</div>
 		</a>

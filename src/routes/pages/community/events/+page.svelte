@@ -18,17 +18,14 @@
 		</section>
 
 		<!-- Regular Committee Meetings -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
-			<h2 class="mb-6 text-2xl font-bold">Regular Governance Meetings</h2>
-			<div class="grid gap-6 md:grid-cols-2">
+		<section class="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8">
+			<h2 class="mb-4 sm:mb-6 text-2xl font-bold">Regular Governance Meetings</h2>
+			<div class="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
 				<!-- Builders Committee -->
-				<div class="rounded-xl border border-purple-400/20 bg-purple-400/5 p-6">
-					<div class="mb-4 flex items-center justify-between">
+				<div class="rounded-xl border border-purple-400/20 bg-purple-400/5 p-4 sm:p-6">
+					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
 						<h3 class="font-display text-xl text-purple-200">Builders Committee</h3>
-						<span
-							class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm"
-							>Weekly</span
-						>
+						<span class="inline-block rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm">Weekly</span>
 					</div>
 					<div class="space-y-4">
 						<div class="text-sm text-white/60">
@@ -82,12 +79,10 @@
 				</div>
 
 				<!-- Voiagers Committee -->
-				<div class="rounded-xl border border-blue-400/20 bg-blue-400/5 p-6">
-					<div class="mb-4 flex items-center justify-between">
+				<div class="rounded-xl border border-blue-400/20 bg-blue-400/5 p-4 sm:p-6">
+					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
 						<h3 class="font-display text-xl text-blue-200">Voiagers Committee</h3>
-						<span class="rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-sm"
-							>Weekly</span
-						>
+						<span class="inline-block rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-sm">Weekly</span>
 					</div>
 					<div class="space-y-4">
 						<div class="text-sm text-white/60">
@@ -141,12 +136,10 @@
 				</div>
 
 				<!-- Network Committee -->
-				<div class="rounded-xl border border-green-400/20 bg-green-400/5 p-6">
-					<div class="mb-4 flex items-center justify-between">
+				<div class="rounded-xl border border-green-400/20 bg-green-400/5 p-4 sm:p-6">
+					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
 						<h3 class="font-display text-xl text-green-200">Network Committee</h3>
-						<span class="rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-sm"
-							>Weekly</span
-						>
+						<span class="inline-block rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-sm">Weekly</span>
 					</div>
 					<div class="space-y-4">
 						<div class="text-sm text-white/60">
@@ -200,13 +193,10 @@
 				</div>
 
 				<!-- Council Meeting -->
-				<div class="rounded-xl border border-yellow-400/20 bg-yellow-400/5 p-6">
-					<div class="mb-4 flex items-center justify-between">
+				<div class="rounded-xl border border-yellow-400/20 bg-yellow-400/5 p-4 sm:p-6">
+					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
 						<h3 class="font-display text-xl text-yellow-200">Council Meeting</h3>
-						<span
-							class="rounded-full border border-yellow-400/20 bg-yellow-400/10 px-3 py-1 text-sm"
-							>Weekly</span
-						>
+						<span class="inline-block rounded-full border border-yellow-400/20 bg-yellow-400/10 px-3 py-1 text-sm">Weekly</span>
 					</div>
 					<div class="space-y-4">
 						<div class="text-sm text-white/60">
