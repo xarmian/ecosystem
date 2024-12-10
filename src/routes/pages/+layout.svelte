@@ -119,7 +119,6 @@
 			subSections: {
 				socials: { title: 'Socials', description: 'Follow the latest' },
 				events: { title: 'Events', description: 'Spaces & Meetings' },
-				news: { title: 'News', description: 'Latest Updates' }
 			}
 		},
 		governance: {
