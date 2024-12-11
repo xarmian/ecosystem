@@ -285,16 +285,16 @@
 						<div class="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 p-3">
 							<div class="flex flex-col">
 								<span class="text-sm text-white/60">Genesis ID</span>
-								<span class="font-mono text-sm text-purple-400">voitest-v1</span>
+								<span class="font-mono text-sm text-purple-400">voitest-v1.1</span>
 							</div>
-							<CopyButton text="voitest-v1" />
+							<CopyButton text="voitest-v1.1" />
 						</div>
 						<div class="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 p-3">
 							<div class="flex flex-col">
 								<span class="text-sm text-white/60">Genesis Hash</span>
-								<span class="font-mono text-sm text-purple-400 break-all">IXnoWtviVVJW5LGivNFc0Dq14V3kqaXuK2u5OQrdVZo=</span>
+								<span class="font-mono text-sm text-purple-400 break-all">mufvzhECYAe3WaU075v0z4k1/SNUIuUPCyBTE+Z/08s=</span>
 							</div>
-							<CopyButton text="IXnoWtviVVJW5LGivNFc0Dq14V3kqaXuK2u5OQrdVZo=" />
+							<CopyButton text="mufvzhECYAe3WaU075v0z4k1/SNUIuUPCyBTE+Z/08s=" />
 						</div>
 					</div>
 				</InfoTile>
@@ -323,7 +323,7 @@
 				>
 					<div class="grid gap-4 md:grid-cols-2">
 						<ActionTile
-							title="Testnet Faucet"
+							title="Faucet"
 							description="Get free testnet tokens to develop and test your applications."
 							href="https://faucet.nautilus.sh/"
 							external={true}
@@ -339,7 +339,7 @@
 				>
 					<div class="grid gap-4 md:grid-cols-2">
 						<ActionTile
-							title="Quick Start (Fountain)"
+							title="Fountain"
 							description="Get a small amount of tokens from the community fountain to get started."
 							href="https://fountain.voirewards.com"
 							external={true}
