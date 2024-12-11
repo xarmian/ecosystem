@@ -35,6 +35,12 @@
         --success: #10b981;
         --warning: #f59e0b;
         --error: #ef4444;
+
+        /* Social Colors */
+        --social-blue: rgb(59 130 246);
+        --social-purple: rgb(129 140 248);
+        --social-cyan: rgb(34 211 238);
+        --social-green: rgb(74 222 128);
     }
 
     .dark {

@@ -37,17 +37,6 @@
 <SubSectionTemplate title="For Node Runners" description="Start earning block rewards">
 	<!-- Main Content -->
 	<div class="space-y-8 max-w-[90rem] mx-auto">
-		<!-- Disclaimer -->
-		<div class="rounded-lg border border-white/10 bg-white/5 p-4">
-			<div class="flex items-center gap-3">
-				<svg class="h-5 w-5 flex-shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-				<p class="text-sm text-white/60">
-					<span class="font-semibold text-white/80">Note:</span> Developing on Voi is identical to developing on Algorand, using the same tools and infrastructure. Voi extends functionality by supporting both Standard Assets and Smart Assets, providing more options for your use cases.
-				</p>
-			</div>
-		</div>
 
 		<!-- Step 1: Select Setup Type -->
 		<Section title="Select Setup Type" icon={walletIcon} number={1}>

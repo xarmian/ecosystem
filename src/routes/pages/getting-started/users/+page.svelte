@@ -1,14 +1,15 @@
 <script lang="ts">
 	import SubSectionTemplate from '$lib/components/SubSectionTemplate.svelte';
-	import StepSection from '$lib/components/StepSection.svelte';
-	import CardLink from '$lib/components/CardLink.svelte';
+	import Section from '$lib/components/Section.svelte';
+	import InfoTile from '$lib/components/InfoTile.svelte';
+	import ActionTile from '$lib/components/ActionTile.svelte';
+	import LinkButton from '$lib/components/LinkButton.svelte';
 </script>
 
 <SubSectionTemplate title="For Users" description="Getting Started with Voi">
 	<div class="space-y-12">
 		<!-- Wallet Section -->
-		<StepSection
-			stepNumber={1}
+		<Section
 			title="Install a Wallet"
 			description="To interact with the Voi network, you'll need a compatible wallet. Choose from these trusted options:"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -16,44 +17,52 @@
 				<path d="M18 4v4h4" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M18 11h2" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={1}
 		>
 			<div class="grid gap-4 md:grid-cols-3">
-				<CardLink
+				<ActionTile
 					href="https://kibis.is"
 					title="Kibisis"
 					description="Browser Extension & Mobile app for daily use and DApp interactions."
 					external={true}
 					actionText="Visit Website"
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="https://lute.app"
 					title="Lute"
 					description="User-friendly web wallet focused on simplicity and security."
 					external={true}
 					actionText="Visit Website"
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="https://wallet.biatec.io/new-wallet"
 					title="Biatec"
 					description="Feature-rich web wallet with an intuitive interface."
 					external={true}
 					actionText="Visit Website"
+					variant="dark"
 				/>
 			</div>
-		</StepSection>
+		</Section>
 
 		<!-- Account Creation Section -->
-		<StepSection
-			stepNumber={2}
+		<Section
 			title="Create Your Account"
 			description="After installing your wallet of choice, you'll need to create a new account:"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M12 4v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={2}
 		>
-			<div class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6">
+			<InfoTile
+				title="Account Setup Steps"
+				description="Follow these steps to create your account securely"
+				variant="dark"
+			>
 				<ul class="space-y-4">
 					<li class="flex items-start gap-3">
 						<span class="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-400/10 text-xs font-mono text-purple-400">1</span>
@@ -74,164 +83,171 @@
 						<span>Confirm your mnemonic phrase to activate your account</span>
 					</li>
 				</ul>
-			</div>
-		</StepSection>
+			</InfoTile>
+		</Section>
 
 		<!-- Get Tokens Section -->
-		<StepSection
-			stepNumber={3}
+		<Section
 			title="Get Your First VOI Tokens"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M8 9L12 15L16 9" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={3}
 		>
 			<div class="grid gap-4 sm:grid-cols-2">
-				<CardLink
+				<ActionTile
 					href="https://fountain.voirewards.com"
 					title="Quick Start (Fountain)"
 					description="Get a small amount of tokens from the community fountain to get started with Voi."
 					external={true}
 					actionText="Visit Fountain"
-					highlight={true}
+					variant="dark"
 				/>
-				<CardLink
+				<ActionTile
 					href="https://www.mexc.com/exchange/VOI_USDT"
 					title="Buy Tokens"
 					description="Purchase VOI tokens from MEXC exchange for long-term use."
-					external={true}
+						external={true}
 					actionText="Trade on MEXC"
-					highlight={true}
+					variant="dark"
 				/>
 			</div>
-		</StepSection>
+		</Section>
 
 		<!-- Explore Section -->
-		<StepSection
-			stepNumber={4}
+		<Section
 			title="Explore the Ecosystem"
-				icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M9 10a3 3 0 015.12-2.12L15 9m-3 3h2m-1 3a3 3 0 01-5.12 2.12L7 15" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={4}
 		>
-			<CardLink
+			<ActionTile
 				href="/pages/projects/directory"
 				title="Project Directory"
 				description="Discover the various projects and applications being built on Voi."
-				highlight={true}
 				actionText="Browse Projects"
+				variant="dark"
 			/>
-		</StepSection>
+		</Section>
 
 		<!-- Earn Rewards Section -->
-		<StepSection
-			stepNumber={5}
+		<Section
 			title="Earn Rewards"
 			description="There are several ways to earn rewards in the Voi ecosystem:"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M12 8v8m-4-4h8" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={5}
 		>
 			<div class="grid gap-4 md:grid-cols-3">
-				<CardLink
+				<ActionTile
 					href="/pages/rewards/node-running"
 					title="Run a Node"
 					description="Help secure the network and earn block rewards."
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="/pages/rewards/incentives"
 					title="Incentives"
 					description="Various opportunities to earn by contributing."
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="/pages/rewards/competitions"
 					title="Competitions"
 					description="Engage in community challenges and games."
+					variant="dark"
 				/>
 			</div>
-		</StepSection>
+		</Section>
 
 		<!-- Community Section -->
-		<StepSection
-			stepNumber={6}
+		<Section
 			title="Join the Community"
 			description="Connect with other Voi users and stay updated:"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-1" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M13 3H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l4-4h2a2 2 0 002-2V5a2 2 0 00-2-2z" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={6}
 		>
 			<div class="grid gap-4 md:grid-cols-4">
-				<CardLink
+				<ActionTile
 					href="https://twitter.com/Voi_Net"
 					title="Twitter"
 					description="Follow for latest updates"
 					external={true}
 					actionText="Follow Us"
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="https://discord.gg/vnFbrJrHeW"
 					title="Discord"
 					description="Join discussions and get support"
 					external={true}
 					actionText="Join Server"
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="https://t.me/VoiOfficial"
 					title="Telegram"
 					description="Join our community chat"
 					external={true}
 					actionText="Join Chat"
+					variant="dark"
 				/>
 
-				<CardLink
+				<ActionTile
 					href="https://medium.com/@voifoundation"
 					title="Medium"
 					description="Read our latest articles"
 					external={true}
 					actionText="Read More"
+					variant="dark"
 				/>
 			</div>
-		</StepSection>
+		</Section>
 
 		<!-- Governance Section -->
-		<StepSection
-			stepNumber={7}
+		<Section
 			title="Participate in Governance"
 			icon={`<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path d="M12 3L20 8.5V15.5L12 21L4 15.5V8.5L12 3Z" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M12 12L12 21M12 12L20 8.5M12 12L4 8.5" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>`}
+			number={7}
 		>
-			<CardLink
+			<ActionTile
 				href="/pages/governance/overview"
 				title="Governance Overview"
 				description="Have a say in the future of Voi! Learn about our governance process and how to participate."
-				highlight={true}
+				variant="dark"
 			/>
-		</StepSection>
+		</Section>
 	</div>
 
 	<svelte:fragment slot="related">
-		<CardLink
+		<ActionTile
 			href="/pages/getting-started/developers"
 			title="For Developers"
 			description="Ready to build on Voi? Check out our developer resources."
 		/>
 
-		<CardLink
+		<ActionTile
 			href="/pages/technical/nodes"
 			title="Run a Node"
 			description="Learn how to set up and operate a Voi node."
 		/>
 
-		<CardLink
+		<ActionTile
 			href="/pages/governance/overview"
 			title="Governance"
 			description="Understand how Voi's governance works and how to participate."

@@ -1,214 +1,143 @@
 <script lang="ts">
 	import SubSectionTemplate from '$lib/components/SubSectionTemplate.svelte';
+	import Section from '$lib/components/Section.svelte';
+	import InfoTile from '$lib/components/InfoTile.svelte';
+	import ActionTile from '$lib/components/ActionTile.svelte';
+
+	const committees = [
+		{
+			title: 'Network Committee',
+			description:
+				'Focuses on technical infrastructure, node operations, and network performance optimization.',
+			registerLink: 'https://forms.gle/Y3MbAhdJbYgkXmzs7'
+		},
+		{
+			title: 'Voiagers Committee',
+			description:
+				'Represents community interests, engagement initiatives, and ecosystem growth strategies.',
+			registerLink: 'https://forms.gle/vDt1sgkrm671Uc9q6'
+		},
+		{
+			title: 'Builders Committee',
+			description:
+				'Drives development initiatives, technical standards, and builder support programs.',
+			registerLink: 'https://forms.gle/wc7pFCUsSBm3yoEB6'
+		}
+	];
+
+	const features = [
+		'Community members can propose and create new committees',
+		'Council members represent committee interests in governance',
+		'Direct channel for specialized input, feedback and proposal creation'
+	];
 </script>
 
 <SubSectionTemplate
 	title="Committees"
 	description="Collaborative working groups driving ecosystem development"
 >
-	<!-- Intro Section -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
-		<div class="prose prose-invert max-w-none">
+	<div class="space-y-8">
+		<!-- Introduction -->
+		<Section title="Overview">
 			<p class="text-lg text-white/80">
 				Committees provide a structured way for community members to contribute their expertise and
 				help shape Voi's future. While meetings are open to all, registering will ensure you receive
 				calendar invites and never miss a meeting.
 			</p>
-		</div>
-	</div>
+		</Section>
 
-	<!-- Committees Overview -->
-	<div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-8">
-		<div class="flex items-center justify-between">
-			<h2 class="text-2xl font-bold">Community Committees</h2>
+		<!-- Committees Overview -->
+		<Section title="Community Committees">
 			<a
 				href="/pages/community/events"
-				class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm transition-all hover:border-white/20 hover:bg-white/10"
+				class="inline-flex items-center rounded-lg border border-white/10 bg-[#1a0b2e]/80 px-4 py-2 text-sm text-purple-200 transition-all hover:border-white/20 hover:bg-[#1a0b2e]"
+				slot="button"
 			>
 				View Meeting Schedule
 				<svg class="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-					<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" />
 				</svg>
 			</a>
-		</div>
 
-		<!-- Current Committees -->
-		<div class="mt-8 grid gap-6 md:grid-cols-3">
-			<div
-				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
-			>
-				<h3 class="font-display text-xl">Network Committee</h3>
-				<p class="mt-2 text-sm text-white/60">
-					Focuses on technical infrastructure, node operations, and network performance
-					optimization.
-				</p>
-				<div class="mt-4">
+			<!-- Current Committees -->
+			<div class="mt-6 grid gap-6 md:grid-cols-3">
+				{#each committees as committee}
 					<a
-						href="https://forms.gle/Y3MbAhdJbYgkXmzs7"
+						href={committee.registerLink}
 						target="_blank"
-						class="inline-flex items-center text-sm text-purple-400 hover:text-purple-300"
+						class="group block h-full transition-transform hover:scale-[1.02]"
 					>
-						Register →
+						<InfoTile
+							title={committee.title}
+							description={committee.description}
+							variant="dark"
+							icon={`<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+								<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>`}
+						>
+							<div slot="footer" class="mt-4 flex items-center font-mono text-sm text-white/40">
+								<span>Register</span>
+								<svg
+									class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
+									<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</div>
+						</InfoTile>
 					</a>
-				</div>
+				{/each}
 			</div>
 
-			<div
-				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
-			>
-				<h3 class="font-display text-xl">Voiagers Committee</h3>
-				<p class="mt-2 text-sm text-white/60">
-					Represents community interests, engagement initiatives, and ecosystem growth strategies.
-				</p>
-				<div class="mt-4">
-					<a
-						href="https://forms.gle/vDt1sgkrm671Uc9q6"
-						target="_blank"
-						class="inline-flex items-center text-sm text-purple-400 hover:text-purple-300"
-					>
-						Register →
-					</a>
-				</div>
+			<!-- Key Features -->
+			<div class="mt-12">
+				<InfoTile
+					title="Key Features"
+					description="Core aspects of our committee system"
+					variant="dark"
+				>
+					<div class="space-y-2 text-white/80">
+						{#each features as feature}
+							<div class="flex items-start gap-2">
+								<svg
+									class="mt-1 h-4 w-4 flex-shrink-0 text-voi-light"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+								>
+									<path
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+								</svg>
+								{feature}
+							</div>
+						{/each}
+					</div>
+				</InfoTile>
 			</div>
-
-			<div
-				class="rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
-			>
-				<h3 class="font-display text-xl">Builders Committee</h3>
-				<p class="mt-2 text-sm text-white/60">
-					Drives development initiatives, technical standards, and builder support programs.
-				</p>
-				<div class="mt-4">
-					<a
-						href="https://forms.gle/wc7pFCUsSBm3yoEB6"
-						target="_blank"
-						class="inline-flex items-center text-sm text-purple-400 hover:text-purple-300"
-					>
-						Register →
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<div
-			class="mt-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent p-6"
-		>
-			<h3 class="text-xl">Key Features</h3>
-			<ul class="mt-4 space-y-2 text-white/80">
-				<li class="flex items-start gap-2">
-					<svg
-						class="mt-1 h-4 w-4 flex-shrink-0 text-voi-light"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-					>
-						<path
-							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-					Community members can propose and create new committees
-				</li>
-				<li class="flex items-start gap-2">
-					<svg
-						class="mt-1 h-4 w-4 flex-shrink-0 text-voi-light"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-					>
-						<path
-							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-					Council members represent committee interests in governance
-				</li>
-				<li class="flex items-start gap-2">
-					<svg
-						class="mt-1 h-4 w-4 flex-shrink-0 text-voi-light"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-					>
-						<path
-							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-					Direct channel for specialized input and feedback
-				</li>
-			</ul>
-		</div>
+		</Section>
 	</div>
 
 	<svelte:fragment slot="related">
-		<a
+		<ActionTile
+			title="Governance Overview"
+			description="Learn about Voi's tripartite governance system and how it works."
 			href="/pages/governance/overview"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">Governance Overview</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Learn about Voi's tripartite governance system and how it works.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
-
-		<a
+		/>
+		<ActionTile
+			title="Council"
+			description="Discover the role and responsibilities of the Voi Council."
 			href="/pages/governance/council"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">Council</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Discover the role and responsibilities of the Voi Council.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
-
-		<a
+		/>
+		<ActionTile
+			title="Voting"
+			description="Understand how voting works and how to participate in governance decisions."
 			href="/pages/governance/voting"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">Voting</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Understand how voting works and how to participate in governance decisions.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
+		/>
 	</svelte:fragment>
 </SubSectionTemplate>

@@ -1,415 +1,185 @@
 <script lang="ts">
 	import SubSectionTemplate from '$lib/components/SubSectionTemplate.svelte';
+	import Section from '$lib/components/Section.svelte';
+	import InfoTile from '$lib/components/InfoTile.svelte';
+	import ActionTile from '$lib/components/ActionTile.svelte';
+
+	const twitterIcon = `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+		<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+	</svg>`;
+
+	const meetings = [
+		{
+			title: 'Builders Committee',
+			time: 'Wednesdays at 9:00 AM EST',
+			color: 'purple',
+			meetingUrl: 'https://meet.google.com/neh-cnjd-uuo',
+			description: 'Weekly discussions on ecosystem development and technical improvements.'
+		},
+		{
+			title: 'Voiagers Committee',
+			time: 'Wednesdays at 12:00 PM EST',
+			color: 'blue',
+			meetingUrl: 'https://meet.google.com/roc-qmto-wxm',
+			description: 'Community engagement and growth initiatives planning.'
+		},
+		{
+			title: 'Network Committee',
+			time: 'Thursdays at 12:00 PM EST',
+			color: 'green',
+			meetingUrl: 'https://meet.google.com/gbk-rkho-jnm',
+			description: 'Network performance and infrastructure discussions.'
+		},
+		{
+			title: 'Council Meeting',
+			time: 'Tuesdays at 11:00 AM EST',
+			color: 'yellow',
+			meetingUrl: '#',
+			description: 'High-level ecosystem decisions and governance.',
+			isLive: true
+		}
+	];
+
+	const communityKols = [
+		{
+			name: 'Crehate',
+			handle: '@crehate',
+			role: 'Community KOL',
+			url: 'https://x.com/crehate',
+			icon: twitterIcon
+		},
+		{
+			name: 'Taco',
+			handle: '@taco_coin',
+			role: 'Community KOL',
+			url: 'https://x.com/taco_coin',
+			icon: twitterIcon
+		},
+		{
+			name: 'Ice Age',
+			handle: '@IceAgeTrails',
+			role: 'Community KOL',
+			url: 'https://x.com/IceAgeTrails',
+			icon: twitterIcon
+		},
+		{
+			name: 'Mazza',
+			handle: '@itsmazza_eth',
+			role: 'Community KOL',
+			url: 'https://x.com/itsmazza_eth',
+			icon: twitterIcon
+		}
+	];
 </script>
 
-<SubSectionTemplate
-	title="Community Events"
-	description="Join our regular meetings and community events"
->
-	<div class="space-y-12">
+<SubSectionTemplate title="Community Events" description="Join our regular meetings and community events">
+	<div class="space-y-8">
 		<!-- Introduction -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
-			<div class="prose prose-invert max-w-none">
-				<p class="lead text-lg text-white/80">
-					Voi's community is built on active participation and open dialogue. All committee meetings
-					are open to the public, recorded, and transcribed for transparency.
-				</p>
-			</div>
-		</section>
+		<Section title="Overview">
+			<p class="text-lg text-white/80">
+				Voi's community is built on active participation and open dialogue. All committee meetings are open
+				to the public, recorded, and transcribed for transparency.
+			</p>
+		</Section>
 
 		<!-- Regular Committee Meetings -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8">
-			<h2 class="mb-4 sm:mb-6 text-2xl font-bold">Regular Governance Meetings</h2>
-			<div class="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
-				<!-- Builders Committee -->
-				<div class="rounded-xl border border-purple-400/20 bg-purple-400/5 p-4 sm:p-6">
-					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-						<h3 class="font-display text-xl text-purple-200">Builders Committee</h3>
-						<span class="inline-block rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm">Weekly</span>
-					</div>
-					<div class="space-y-4">
-						<div class="text-sm text-white/60">
-							<div class="flex items-start gap-2">
-								<svg
-									class="mt-1 h-4 w-4 flex-shrink-0"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-								>
-									<path
-										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
+		<Section title="Regular Governance Meetings">
+			<div class="grid gap-6 grid-cols-1 md:grid-cols-2">
+				{#each meetings as meeting}
+					<InfoTile
+						title={meeting.title}
+						description={meeting.description}
+						variant="dark"
+					>
+						<div class="mt-4 flex flex-col gap-4">
+							<div class="flex items-center gap-2 text-sm text-white/60">
+								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
-								<span>Wednesdays at 9:00 AM EST</span>
+								<span>{meeting.time}</span>
+							</div>
+							<div class="flex flex-wrap gap-2">
+								<a
+									href={meeting.meetingUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="inline-flex items-center gap-1 rounded-full border border-{meeting.color}-400/20 bg-{meeting.color}-400/10 px-3 py-1 text-sm text-{meeting.color}-200 transition-colors hover:bg-{meeting.color}-400/20"
+								>
+									<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+										<path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+									{meeting.isLive ? 'Watch Live' : 'Join Meeting'}
+								</a>
+								<a
+									href="#"
+									class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60 transition-colors hover:bg-white/10"
+								>
+									<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+										<path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+									{meeting.isLive ? 'Past Recordings' : 'Past Meetings'}
+								</a>
 							</div>
 						</div>
-						<div class="flex flex-wrap gap-2">
-							<a
-								href="https://meet.google.com/neh-cnjd-uuo"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex items-center gap-1 rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200 transition-colors hover:bg-purple-400/20"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Join Meeting
-							</a>
-							<a
-								href="#"
-								class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60 transition-colors hover:bg-white/10"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Past Meetings
-							</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- Voiagers Committee -->
-				<div class="rounded-xl border border-blue-400/20 bg-blue-400/5 p-4 sm:p-6">
-					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-						<h3 class="font-display text-xl text-blue-200">Voiagers Committee</h3>
-						<span class="inline-block rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-sm">Weekly</span>
-					</div>
-					<div class="space-y-4">
-						<div class="text-sm text-white/60">
-							<div class="flex items-start gap-2">
-								<svg
-									class="mt-1 h-4 w-4 flex-shrink-0"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-								>
-									<path
-										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span>Wednesdays at 12:00 PM EST</span>
-							</div>
-						</div>
-						<div class="flex flex-wrap gap-2">
-							<a
-								href="https://meet.google.com/roc-qmto-wxm"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex items-center gap-1 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-sm text-blue-200 transition-colors hover:bg-blue-400/20"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Join Meeting
-							</a>
-							<a
-								href="#"
-								class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60 transition-colors hover:bg-white/10"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Past Meetings
-							</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- Network Committee -->
-				<div class="rounded-xl border border-green-400/20 bg-green-400/5 p-4 sm:p-6">
-					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-						<h3 class="font-display text-xl text-green-200">Network Committee</h3>
-						<span class="inline-block rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-sm">Weekly</span>
-					</div>
-					<div class="space-y-4">
-						<div class="text-sm text-white/60">
-							<div class="flex items-start gap-2">
-								<svg
-									class="mt-1 h-4 w-4 flex-shrink-0"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-								>
-									<path
-										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span>Thursdays at 12:00 PM EST</span>
-							</div>
-						</div>
-						<div class="flex flex-wrap gap-2">
-							<a
-								href="https://meet.google.com/gbk-rkho-jnm"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex items-center gap-1 rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-sm text-green-200 transition-colors hover:bg-green-400/20"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Join Meeting
-							</a>
-							<a
-								href="#"
-								class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60 transition-colors hover:bg-white/10"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Past Meetings
-							</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- Council Meeting -->
-				<div class="rounded-xl border border-yellow-400/20 bg-yellow-400/5 p-4 sm:p-6">
-					<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-						<h3 class="font-display text-xl text-yellow-200">Council Meeting</h3>
-						<span class="inline-block rounded-full border border-yellow-400/20 bg-yellow-400/10 px-3 py-1 text-sm">Weekly</span>
-					</div>
-					<div class="space-y-4">
-						<div class="text-sm text-white/60">
-							<div class="flex items-start gap-2">
-								<svg
-									class="mt-1 h-4 w-4 flex-shrink-0"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-								>
-									<path
-										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span>Tuesdays at 11:00 AM EST</span>
-							</div>
-						</div>
-						<div class="flex flex-wrap gap-2">
-							<a
-								href="#"
-								class="inline-flex items-center gap-1 rounded-full border border-yellow-400/20 bg-yellow-400/10 px-3 py-1 text-sm text-yellow-200 transition-colors hover:bg-yellow-400/20"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Watch Live
-							</a>
-							<a
-								href="#"
-								class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/60 transition-colors hover:bg-white/10"
-							>
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-									<path
-										d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								Past Recordings
-							</a>
-						</div>
-					</div>
-				</div>
+					</InfoTile>
+				{/each}
 			</div>
-		</section>
+		</Section>
 
 		<!-- Community Events -->
-		<section class="rounded-2xl border border-white/10 bg-white/5 p-8">
-			<h2 class="mb-6 text-2xl font-bold">Community Events</h2>
-			<div class="space-y-6">
-				<p class="text-lg text-white/80">
-					Follow our community KOLs for Twitter Spaces and additional events
-				</p>
-				<div class="grid gap-4 md:grid-cols-3">
+		<Section title="Community Events">
+			<p class="mb-6 text-lg text-white/80">
+				Follow our community KOLs for Twitter Spaces and additional events
+			</p>
+			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+				{#each communityKols as kol}
 					<a
-						href="https://x.com/crehate"
+						href={kol.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-blue-400/20 hover:bg-blue-400/5"
+						class="group block transform transition-all duration-200 hover:scale-[1.02]"
 					>
-						<div
-							class="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/20 bg-blue-400/10"
+						<InfoTile
+							title={kol.handle}
+							description=""
+							variant="dark"
 						>
-							<svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-								/>
-							</svg>
-						</div>
-						<div>
-							<div class="font-display text-lg">@crehate</div>
-							<div class="text-sm text-white/60">Community KOL</div>
-						</div>
+							<div slot="header" class="flex items-center gap-3">
+								<div class="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/20 bg-blue-400/10">
+									<div class="text-blue-400">
+										{@html kol.icon}
+									</div>
+								</div>
+								<div class="text-sm text-white/60">{kol.role}</div>
+							</div>
+							<div class="mt-4 flex items-center gap-1 text-sm text-blue-400 transition-all duration-200 group-hover:text-blue-300">
+								<span>Follow on Twitter</span>
+								<svg class="h-4 w-4 transform transition-all duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+									<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+						</InfoTile>
 					</a>
-
-					<a
-						href="https://x.com/taco_coin"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-blue-400/20 hover:bg-blue-400/5"
-					>
-						<div
-							class="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/20 bg-blue-400/10"
-						>
-							<svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-								/>
-							</svg>
-						</div>
-						<div>
-							<div class="font-display text-lg">@taco_coin</div>
-							<div class="text-sm text-white/60">Community KOL</div>
-						</div>
-					</a>
-
-					<a
-						href="https://x.com/IceAgeTrails"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-blue-400/20 hover:bg-blue-400/5"
-					>
-						<div
-							class="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/20 bg-blue-400/10"
-						>
-							<svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-								/>
-							</svg>
-						</div>
-						<div>
-							<div class="font-display text-lg">@IceAgeTrails</div>
-							<div class="text-sm text-white/60">Community KOL</div>
-						</div>
-					</a>
-
-					<a
-						href="https://x.com/itsmazza_eth"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-blue-400/20 hover:bg-blue-400/5"
-					>
-						<div
-							class="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/20 bg-blue-400/10"
-						>
-							<svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-								/>
-							</svg>
-						</div>
-						<div>
-							<div class="font-display text-lg">@itsmazza_eth</div>
-							<div class="text-sm text-white/60">Community KOL</div>
-						</div>
-					</a>
-				</div>
+				{/each}
 			</div>
-		</section>
+		</Section>
 	</div>
 
 	<svelte:fragment slot="related">
-		<a
+		<ActionTile
+			title="Governance"
+			description="Learn how decisions are made in the Voi ecosystem."
 			href="/pages/governance/overview"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">Governance</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Learn how decisions are made in the Voi ecosystem.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
-
-		<a
+		/>
+		<ActionTile
+			title="Social Channels"
+			description="Connect with the Voi community on social media."
 			href="/pages/community/socials"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">Social Channels</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Connect with the Voi community on social media.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
-
-		<a
+		/>
+		<ActionTile
+			title="News"
+			description="Stay updated with the latest announcements."
 			href="/pages/community/news"
-			class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10"
-		>
-			<h3 class="font-display text-xl font-bold">News</h3>
-			<p class="mt-2 font-mono text-sm text-white/60">
-				Stay updated with the latest announcements.
-			</p>
-			<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-				<span>Learn More</span>
-				<svg
-					class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</div>
-		</a>
+		/>
 	</svelte:fragment>
 </SubSectionTemplate>
