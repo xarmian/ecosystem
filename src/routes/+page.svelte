@@ -1,26 +1,53 @@
 <script lang="ts">
 	import { fade, scale, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import NavigationModal from '$lib/components/NavigationModal.svelte';
+	import MobileNavigation from '$lib/components/MobileNavigation.svelte';
+	import type { Section } from '$lib/types/navigation';
 
-	// Define type for sections
-	type Section = {
-		title: string;
-		description: string;
-		icon: string;
-		subSections: Record<string, { title: string; description: string }>;
-	};
-
-	type Sections = Record<string, Section>;
-
-	let activeSection: keyof Sections | null = null;
-	let activeSubSection: string | null = null;
+	let activeSection: keyof typeof sections | null = null;
 	let hoveredSection: string | null = null;
 
-	const hubRadius = 32; // Half of the hub width (64/2)
-	const spokeLength = 300; // Back to original distance
-	const tileSize = 28; // Size of the orbital tiles (w-28)
+	const hubRadius = 32;
+	const spokeLength = 300;
+	const tileSize = 28;
 
-	const sections: Sections = {
+	function toggleSection(section: keyof typeof sections) {
+		if (activeSection === section) {
+			activeSection = null;
+		} else {
+			activeSection = section;
+		}
+	}
+
+	function handleSectionHover(key: string, isEntering: boolean) {
+		hoveredSection = isEntering ? key : null;
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		if (activeSection && event.target instanceof Element) {
+			const modal = document.querySelector('.expanded-content');
+			if (modal && !modal.contains(event.target) && !event.target.closest('.section-button')) {
+				activeSection = null;
+			}
+		}
+	}
+
+	// Initialize star positions on mount
+	onMount(() => {
+		const root = document.documentElement;
+		const randomPercent = () => `${Math.random() * 100}%`;
+
+		root.style.setProperty('--star-1', randomPercent());
+		root.style.setProperty('--star-2', randomPercent());
+		root.style.setProperty('--star-3', randomPercent());
+		root.style.setProperty('--star-4', randomPercent());
+		root.style.setProperty('--star-5', randomPercent());
+		root.style.setProperty('--star-6', randomPercent());
+	});
+
+	// Define sections
+	const sections: Record<string, Section> = {
 		'getting-started': {
 			title: 'Quick Start',
 			description: 'Begin your Voi journey',
@@ -121,63 +148,6 @@
 			}
 		}
 	};
-
-	function toggleSection(section: keyof Sections) {
-		if (activeSection === section) {
-			activeSection = null;
-			activeSubSection = null;
-		} else {
-			activeSection = section;
-			activeSubSection = null;
-		}
-	}
-
-	function toggleSubSection(subSection: string) {
-		activeSubSection = activeSubSection === subSection ? null : subSection;
-	}
-
-	function calculateLineCoordinates(index: number) {
-		const totalSections = Object.keys(sections).length;
-		const angle = (index * (360 / totalSections) - 90) * (Math.PI / 180);
-
-		// Start from the edge of the hub
-		const x1 = Math.cos(angle) * hubRadius;
-		const y1 = Math.sin(angle) * hubRadius;
-
-		// End at the inner edge of the tile (28px is the tile size)
-		const tileOffset = tileSize / 2; // Half the tile size
-		const x2 = Math.cos(angle) * (spokeLength - tileOffset);
-		const y2 = Math.sin(angle) * (spokeLength - tileOffset);
-
-		return { x1, y1, x2, y2 };
-	}
-
-	function handleClickOutside(event: MouseEvent) {
-		if (activeSection && event.target instanceof Element) {
-			const modal = document.querySelector('.expanded-content');
-			if (modal && !modal.contains(event.target) && !event.target.closest('.section-button')) {
-				activeSection = null;
-				activeSubSection = null;
-			}
-		}
-	}
-
-	function handleSectionHover(key: string, isEntering: boolean) {
-		hoveredSection = isEntering ? key : null;
-	}
-
-	// Initialize star positions on mount
-	onMount(() => {
-		const root = document.documentElement;
-		const randomPercent = () => `${Math.random() * 100}%`;
-
-		root.style.setProperty('--star-1', randomPercent());
-		root.style.setProperty('--star-2', randomPercent());
-		root.style.setProperty('--star-3', randomPercent());
-		root.style.setProperty('--star-4', randomPercent());
-		root.style.setProperty('--star-5', randomPercent());
-		root.style.setProperty('--star-6', randomPercent());
-	});
 </script>
 
 <div
@@ -203,9 +173,18 @@
 	</div>
 
 	<div class="container mx-auto h-full px-4">
-		<!-- Desktop Layout (≥750px) -->
+		<!-- Mobile Navigation -->
+		<MobileNavigation
+			{sections}
+			{activeSection}
+			{toggleSection}
+			closeNavPanel={() => {}}
+			{handleSectionHover}
+		/>
+
+		<!-- Desktop Layout -->
 		<div class="relative hidden min-h-screen items-center justify-center md:flex">
-			<!-- Hub and Spoke Container with fixed dimensions -->
+			<!-- Hub and Spoke Container -->
 			<div class="relative h-[800px] w-[800px]">
 				<!-- SVG layer for connecting lines -->
 				<svg class="pointer-events-none absolute inset-0" viewBox="0 0 800 800">
@@ -254,22 +233,22 @@
 					</div>
 				</div>
 
-				<!-- Orbital Sections -->
+				<!-- Section Buttons -->
 				{#each Object.entries(sections) as [key, section], i}
 					{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
 					{@const x = 400 + Math.cos(angle) * spokeLength}
 					{@const y = 400 + Math.sin(angle) * spokeLength}
 
 					<div
-						class="absolute left-0 top-0"
-						style="transform: translate({x}px, {y}px) translate(-50%, -50%)"
+						class="absolute"
+						style="transform: translate({x}px, {y}px) translate(-50%, -50%); z-index: 10;"
 					>
 						<button
 							class="section-button group relative"
 							class:active={activeSection === key}
-							on:click={() => toggleSection(key)}
 							on:mouseenter={() => handleSectionHover(key, true)}
 							on:mouseleave={() => handleSectionHover(key, false)}
+							on:click={() => toggleSection(key)}
 						>
 							<div
 								class="flex h-28 w-28 transform items-center justify-center rounded-2xl
@@ -311,227 +290,45 @@
 
 				<!-- Desktop Modal -->
 				{#if activeSection}
-					<div
-						class="fixed inset-0 z-50 flex items-center justify-center p-4"
-						transition:fade={{ duration: 200 }}
-						on:click|self={() => (activeSection = null)}
-					>
-						<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-						<div
-							class="relative w-full max-w-2xl rounded-2xl border border-white/20 bg-gradient-to-br from-voi-dark to-voi-light p-8 shadow-2xl"
-							transition:scale={{ duration: 200 }}
-						>
-							<div class="mb-6 flex items-start justify-between">
-								<div>
-									<h2 class="font-display text-3xl font-bold">
-										{sections[activeSection].title}
-									</h2>
-									<p class="mt-2 font-mono text-lg text-white/60">
-										{sections[activeSection].description}
-									</p>
-								</div>
-								<button
-									class="rounded-lg p-2 transition-colors hover:bg-white/10"
-									on:click={() => (activeSection = null)}
-								>
-									<svg
-										class="h-6 w-6"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-									>
-										<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</button>
-							</div>
-							<div class="grid gap-4">
-								{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
-									<a
-										href={activeSection === 'getting-started' && subKey === 'node-runners'
-											? '/pages/getting-started/node-runners'
-											: `/pages/${activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
-										class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
-									>
-										<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
-										<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
-										<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-											<span>Learn more</span>
-											<svg
-												class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2"
-											>
-												<path
-													d="M5 12h14M12 5l7 7-7 7"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												/>
-											</svg>
-										</div>
-									</a>
-								{/each}
-							</div>
-						</div>
-					</div>
+					<NavigationModal
+						{activeSection}
+						{sections}
+						onClose={() => (activeSection = null)}
+						{handleSectionHover}
+						closeNavPanel={() => {}}
+					/>
 				{/if}
-			</div>
-		</div>
-
-		<!-- Mobile Layout (<750px) -->
-		<div class="md:hidden">
-			<!-- Mobile Header with increased top padding -->
-			<div class="mb-8 pt-12 text-center">
-				<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-16" />
-				<h1 class="font-display text-2xl font-bold">Ecosystem Portal</h1>
-				<p class="mt-2 font-mono text-sm text-white/60">Explore the Voi ecosystem</p>
-			</div>
-
-			<!-- Mobile Section Cards -->
-			<div class="grid gap-4 pb-12">
-				{#each Object.entries(sections) as [key, section]}
-					<div
-						class="cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br
-								{key === 'getting-started'
-							? 'border-white/30 from-white/20 to-white/10 shadow-lg'
-							: 'from-white/10 to-white/5'}"
-						on:click={() => toggleSection(key)}
-					>
-						<div class="w-full p-4 text-left transition-all active:scale-[0.98]">
-							<div class="flex items-center">
-								<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">
-									{@html section.icon}
-								</div>
-								<div>
-									<h2
-										class="font-display text-lg font-bold {key === 'getting-started'
-											? 'text-white'
-											: ''}"
-									>
-										{section.title}
-									</h2>
-									<p class="font-mono text-sm text-white/60">{section.description}</p>
-								</div>
-								<div class="ml-auto">
-									<svg
-										class="h-5 w-5 transform text-white/40 transition-transform duration-300 {activeSection ===
-										key
-											? 'rotate-90'
-											: ''}"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-									>
-										<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</div>
-							</div>
-						</div>
-
-						{#if activeSection === key}
-							<div class="border-t border-white/10 bg-white/5" transition:slide>
-								<div class="grid gap-4 p-4">
-									{#each Object.entries(section.subSections) as [subKey, subSection]}
-										<a
-											href={key === 'getting-started' && subKey === 'node-runners'
-												? '/pages/getting-started/node-runners'
-												: `/pages/${key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
-											class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
-										>
-											<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
-											<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
-											<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-												<span>Learn more</span>
-												<svg
-													class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-												>
-													<path
-														d="M5 12h14M12 5l7 7-7 7"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													/>
-												</svg>
-											</div>
-										</a>
-									{/each}
-								</div>
-							</div>
-						{/if}
-					</div>
-				{/each}
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-	/* Add new animation for subtle pulsing */
-	@keyframes pulse-subtle {
-		0%,
-		100% {
-			transform: scale(1.1);
-			box-shadow: 0 10px 30px -10px rgba(103, 46, 217, 0.3);
-		}
-		50% {
-			transform: scale(1.12);
-			box-shadow: 0 10px 30px -5px rgba(103, 46, 217, 0.4);
-		}
-	}
-
-	.animate-pulse-subtle {
-		animation: pulse-subtle 3s ease-in-out infinite;
-	}
-
 	.connection-line {
-		stroke-dasharray: 4, 4;
-		animation: flowForward 20s linear infinite;
-		transition: all 0.3s ease;
-		opacity: 0.5;
+		stroke-dasharray: 4;
+		animation: flow 1s linear infinite;
 	}
 
 	.connection-line.reverse-flow {
-		animation: flowBackward 20s linear infinite;
-		opacity: 0.8;
+		animation: reverse-flow 1s linear infinite;
 	}
 
-	@keyframes flowForward {
+	@keyframes flow {
+		from {
+			stroke-dashoffset: 8;
+		}
 		to {
-			stroke-dashoffset: -100;
+			stroke-dashoffset: 0;
 		}
 	}
 
-	@keyframes flowBackward {
-		to {
-			stroke-dashoffset: 100;
+	@keyframes reverse-flow {
+		from {
+			stroke-dashoffset: 0;
 		}
-	}
-
-	:global(body) {
-		@apply overflow-x-hidden bg-voi-dark;
-	}
-
-	:global(.connection-line) {
-		opacity: var(--line-opacity, 1);
-	}
-
-	:global(.tour-active .connection-line) {
-		--line-opacity: 0.25;
-	}
-
-	:global(.tour-active .connection-line[data-section='{activeSection}']) {
-		--line-opacity: 1;
-	}
-
-	/* Ensure proper stacking context */
-	.section-button {
-		isolation: isolate;
+		to {
+			stroke-dashoffset: 8;
+		}
 	}
 
 	/* Background Effects */
@@ -651,15 +448,5 @@
 		75% {
 			transform: translate(-15px, -5px);
 		}
-	}
-
-	/* Star Positions */
-	:global(:root) {
-		--star-1: 10%;
-		--star-2: 45%;
-		--star-3: 65%;
-		--star-4: 25%;
-		--star-5: 85%;
-		--star-6: 75%;
 	}
 </style>

@@ -1,10 +1,15 @@
 <script lang="ts">
 	import '../../app.css';
-	import { fade, scale, fly, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
+	import NavigationModal from '$lib/components/NavigationModal.svelte';
+	import MobileNavigation from '$lib/components/MobileNavigation.svelte';
+	import type { Section } from '$lib/types/navigation';
 
 	let isNavPanelOpen = false;
+	let activeSection: keyof typeof sections | null = null;
+	let hoveredSection: string | null = null;
 
 	// Initialize star positions on mount
 	onMount(() => {
@@ -32,23 +37,6 @@
 		};
 	});
 
-	// Define type for sections
-	type Section = {
-		title: string;
-		description: string;
-		icon: string;
-		subSections: Record<string, { title: string; description: string }>;
-	};
-
-	type Sections = Record<string, Section>;
-
-	let activeSection: keyof Sections | null = null;
-	let hoveredSection: string | null = null;
-
-	const hubRadius = 32;
-	const spokeLength = 300;
-	const tileSize = 28;
-
 	// Handle scroll locking
 	function toggleScrollLock(lock: boolean) {
 		if (lock) {
@@ -74,8 +62,20 @@
 		toggleScrollLock(false);
 	}
 
+	function toggleSection(section: keyof typeof sections) {
+		if (activeSection === section) {
+			activeSection = null;
+		} else {
+			activeSection = section;
+		}
+	}
+
+	function handleSectionHover(key: string, isEntering: boolean) {
+		hoveredSection = isEntering ? key : null;
+	}
+
 	// Define sections
-	const sections: Sections = {
+	const sections: Record<string, Section> = {
 		'getting-started': {
 			title: 'Quick Start',
 			description: 'Begin your Voi journey',
@@ -176,18 +176,6 @@
 			}
 		}
 	};
-
-	function toggleSection(section: keyof Sections) {
-		if (activeSection === section) {
-			activeSection = null;
-		} else {
-			activeSection = section;
-		}
-	}
-
-	function handleSectionHover(key: string, isEntering: boolean) {
-		hoveredSection = isEntering ? key : null;
-	}
 </script>
 
 <div class="min-h-screen bg-voi-dark text-white">
@@ -198,7 +186,7 @@
 	{#if isNavPanelOpen}
 		<div
 			class="fixed inset-0 z-50 bg-voi-dark"
-				transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
+			transition:fly={{ x: -window.innerWidth, duration: 300, opacity: 1 }}
 		>
 			<!-- Background Effects -->
 			<div class="absolute inset-0 overflow-hidden">
@@ -220,96 +208,16 @@
 
 			<div class="relative h-full overflow-auto">
 				<div class="container mx-auto h-full px-4">
-					<!-- Mobile Navigation (< 768px) -->
-					<div class="md:hidden">
-						<!-- Header with Logo -->
-						<div class="mb-8 pt-20 text-center">
-							<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-16" />
-							<h1 class="font-display text-2xl font-bold">Ecosystem Portal</h1>
-							<p class="mt-2 font-mono text-sm text-white/60">Explore the Voi ecosystem</p>
-						</div>
+					<!-- Mobile Navigation -->
+					<MobileNavigation
+						{sections}
+						{activeSection}
+						{toggleSection}
+						{closeNavPanel}
+						{handleSectionHover}
+					/>
 
-						<div class="grid gap-4 pb-12">
-							{#each Object.entries(sections) as [key, section]}
-								<div
-									class="cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br
-											{key === 'getting-started'
-										? 'border-white/30 from-white/20 to-white/10 shadow-lg'
-										: 'from-white/10 to-white/5'}"
-									on:click={() => toggleSection(key)}
-								>
-									<div class="w-full p-4 text-left transition-all active:scale-[0.98]">
-										<div class="flex items-center">
-											<div
-												class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/5"
-											>
-												{@html section.icon}
-											</div>
-											<div>
-												<h2
-													class="font-display text-lg font-bold {key === 'getting-started'
-														? 'text-white'
-														: ''}"
-												>
-													{section.title}
-												</h2>
-												<p class="font-mono text-sm text-white/60">{section.description}</p>
-											</div>
-											<div class="ml-auto">
-												<svg
-													class="h-5 w-5 transform text-white/40 transition-transform duration-300 {activeSection ===
-													key
-														? 'rotate-90'
-														: ''}"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-												>
-													<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-												</svg>
-											</div>
-										</div>
-									</div>
-
-									{#if activeSection === key}
-										<div class="border-t border-white/10 bg-white/5" transition:slide>
-											<div class="grid gap-4 p-4">
-												{#each Object.entries(section.subSections) as [subKey, subSection]}
-													<a
-														href={key === 'getting-started' && subKey === 'node-runners'
-															? '/pages/getting-started/node-runners'
-															: `/pages/${key.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
-														class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
-														on:click={closeNavPanel}
-														on:mouseenter={() => handleSectionHover(key, true)}
-														on:mouseleave={() => handleSectionHover(key, false)}
-													>
-														<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
-														<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
-														<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-															<span>Learn more</span>
-															<svg
-																class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-																viewBox="0 0 24 24"
-																fill="none"
-																stroke="currentColor"
-																stroke-width="2"
-															>
-																<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-															</svg>
-														</div>
-													</a>
-												{/each}
-											</div>
-										</div>
-									{/if}
-								</div>
-							{/each}
-						</div>
-					</div>
-
-					<!-- Desktop Navigation (≥ 768px) -->
+					<!-- Desktop Navigation -->
 					<div class="relative hidden min-h-screen items-center justify-center md:flex">
 						<!-- Hub and Spoke Container -->
 						<div class="relative h-[800px] w-[800px]">
@@ -322,10 +230,10 @@
 								{#each Object.entries(sections) as [key, _], i}
 									{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
 									<line
-										x1={400 + Math.cos(angle) * hubRadius}
-										y1={400 + Math.sin(angle) * hubRadius}
-										x2={400 + Math.cos(angle) * (spokeLength - tileSize / 2)}
-										y2={400 + Math.sin(angle) * (spokeLength - tileSize / 2)}
+										x1={400 + Math.cos(angle) * 32}
+										y1={400 + Math.sin(angle) * 32}
+										x2={400 + Math.cos(angle) * (300 - 14)}
+										y2={400 + Math.sin(angle) * (300 - 14)}
 										class="connection-line {hoveredSection === key ? 'reverse-flow' : ''}"
 										stroke="rgba(255, 255, 255, 0.25)"
 										stroke-width={activeSection === key || hoveredSection === key ? '3' : '1.5'}
@@ -368,8 +276,8 @@
 							<!-- Section Buttons -->
 							{#each Object.entries(sections) as [key, section], i}
 								{@const angle = (i * (360 / Object.keys(sections).length) - 90) * (Math.PI / 180)}
-								{@const x = 400 + Math.cos(angle) * spokeLength}
-								{@const y = 400 + Math.sin(angle) * spokeLength}
+								{@const x = 400 + Math.cos(angle) * 300}
+								{@const y = 400 + Math.sin(angle) * 300}
 
 								<div
 									class="absolute"
@@ -422,74 +330,13 @@
 
 							<!-- Desktop Modal -->
 							{#if activeSection}
-								<div
-									class="fixed inset-0 z-50 flex items-center justify-center p-4"
-									transition:fade={{ duration: 200 }}
-									on:click|self={() => (activeSection = null)}
-								>
-									<div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-									<div
-										class="relative w-full max-w-2xl rounded-2xl border border-white/20 bg-gradient-to-br from-voi-dark to-voi-light p-8 shadow-2xl"
-										transition:scale={{ duration: 200 }}
-									>
-										<div class="mb-6 flex items-start justify-between">
-											<div>
-												<h2 class="font-display text-3xl font-bold">
-													{sections[activeSection].title}
-												</h2>
-												<p class="mt-2 font-mono text-lg text-white/60">
-													{sections[activeSection].description}
-												</p>
-											</div>
-											<button
-												class="rounded-lg p-2 transition-colors hover:bg-white/10"
-												on:click={() => (activeSection = null)}
-											>
-												<svg
-													class="h-6 w-6"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-												>
-													<path
-														d="M6 18L18 6M6 6l12 12"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													/>
-												</svg>
-											</button>
-										</div>
-										<div class="grid gap-4">
-											{#each Object.entries(sections[activeSection].subSections) as [subKey, subSection]}
-												<a
-													href={activeSection === 'getting-started' && subKey === 'node-runners'
-														? '/pages/getting-started/node-runners'
-														: `/pages/${activeSection.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}/${subKey.toLowerCase()}`}
-													class="group flex transform flex-col rounded-xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-200 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
-													on:click={closeNavPanel}
-													on:mouseenter={() => handleSectionHover(activeSection, true)}
-													on:mouseleave={() => handleSectionHover(activeSection, false)}
-												>
-													<h3 class="font-display text-xl font-bold">{subSection.title}</h3>
-													<p class="mt-2 font-mono text-white/60">{subSection.description}</p>
-													<div class="mt-4 flex items-center font-mono text-sm text-white/40">
-														<span>Learn more</span>
-														<svg
-															class="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-1"
-															viewBox="0 0 24 24"
-															fill="none"
-															stroke="currentColor"
-															stroke-width="2"
-														>
-															<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-														</svg>
-													</div>
-												</a>
-											{/each}
-										</div>
-									</div>
-								</div>
+								<NavigationModal
+									{activeSection}
+									{sections}
+									onClose={() => (activeSection = null)}
+									{handleSectionHover}
+									{closeNavPanel}
+								/>
 							{/if}
 						</div>
 					</div>
@@ -505,6 +352,7 @@
 </div>
 
 <style>
+	/* Add your existing styles here */
 	:global(body) {
 		@apply bg-voi-dark;
 	}
@@ -533,169 +381,6 @@
 		}
 		to {
 			stroke-dashoffset: 8;
-		}
-	}
-
-	.footer {
-		background: linear-gradient(135deg, #e8e9ec 0%, #d8d9dc 100%);
-		padding: 8rem 2rem 4rem;
-		position: relative;
-		overflow: hidden;
-	}
-
-	.footer-content {
-		max-width: 1200px;
-		margin: 0 auto;
-		position: relative;
-		z-index: 1;
-	}
-
-	.footer-accent {
-		position: absolute;
-		top: -50%;
-		right: -10%;
-		width: 80%;
-		height: 200%;
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(216, 217, 220, 0.3) 100%);
-		transform: rotate(-15deg);
-		border-radius: 100px;
-		filter: blur(50px);
-		z-index: 0;
-	}
-
-	.footer-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 2rem;
-		margin-bottom: 4rem;
-	}
-
-	.brand-section {
-		padding-right: 2rem;
-	}
-
-	.footer-nav {
-		padding-right: 2rem;
-	}
-
-	.footer-logo {
-		max-width: 120px;
-		margin-bottom: 2.5rem;
-		transition: transform 0.3s ease;
-	}
-
-	.footer-logo:hover {
-		transform: translateY(-2px);
-	}
-
-	.footer-heading {
-		font-size: 1.25rem;
-		font-weight: 600;
-		margin-bottom: 2rem;
-		color: #000;
-		letter-spacing: 0.5px;
-	}
-
-	.footer-links {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
-
-	.footer-link {
-		color: #666;
-		text-decoration: none;
-		transition: all 0.3s ease;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		position: relative;
-		width: fit-content;
-	}
-
-	.footer-link:hover {
-		color: #000;
-		transform: translateX(4px);
-	}
-
-	.link-arrow {
-		font-size: 0.8em;
-		opacity: 0;
-		transform: translateX(-4px);
-		transition: all 0.3s ease;
-	}
-
-	.footer-link:hover .link-arrow {
-		opacity: 1;
-		transform: translateX(0);
-	}
-
-	.social-links {
-		display: flex;
-		gap: 1.75rem;
-		margin-top: 2.5rem;
-	}
-
-	.social-icon {
-		width: 24px;
-		height: 24px;
-		color: #666;
-		transition: all 0.3s ease;
-		position: relative;
-	}
-
-	.social-icon:hover {
-		color: #000;
-		transform: translateY(-2px);
-	}
-
-	.social-icon[data-tooltip]:before {
-		content: attr(data-tooltip);
-		position: absolute;
-		bottom: 100%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-8px);
-		background: #000;
-		color: white;
-		padding: 4px 8px;
-		border-radius: 4px;
-		font-size: 12px;
-		opacity: 0;
-		visibility: hidden;
-		transition: all 0.3s ease;
-	}
-
-	.social-icon[data-tooltip]:hover:before {
-		opacity: 1;
-		visibility: visible;
-		transform: translateX(-50%) translateY(-4px);
-	}
-
-	@media (max-width: 768px) {
-		.footer {
-			padding: 6rem 1.5rem 3rem;
-		}
-
-		.footer-grid {
-			grid-template-columns: 1fr;
-			gap: 3rem;
-		}
-
-		.footer-nav,
-		.brand-section {
-			padding-right: 0;
-		}
-
-		.footer-accent {
-			display: none;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.footer-bottom {
-			flex-direction: column;
-			gap: 1.5rem;
-			text-align: center;
 		}
 	}
 
