@@ -195,56 +195,6 @@
 									<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Mainnet</span>
 								</div>
 							</InfoTile>
-
-							<div class="grid gap-4 grid-cols-1 md:grid-cols-2">
-								<InfoTile
-									title="Infrastructure"
-									description="Core infrastructure projects and developments."
-									variant="dark"
-								>
-									<ul class="mt-4 space-y-3">
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">Kibisis Mobile Launch</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">Voi Naming Service</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">No Loss Lottery</span>
-										</li>
-									</ul>
-									<div class="mt-6 flex items-center justify-end">
-										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Projects</span>
-									</div>
-								</InfoTile>
-
-								<InfoTile
-									title="Incentives"
-									description="Community rewards and incentives."
-									variant="dark"
-								>
-									<ul class="mt-4 space-y-3">
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">NFT Rewards</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">DeFi Rewards</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">Business Development Rewards</span>
-										</li>
-									</ul>
-									<div class="mt-6 flex items-center justify-end">
-										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Rewards</span>
-									</div>
-								</InfoTile>
-							</div>
 						</div>
 					</div>
 
@@ -256,11 +206,15 @@
 						<div class="flex-1 space-y-4">
 							<div class="grid gap-4 grid-cols-1 md:grid-cols-2">
 								<InfoTile
-									title="Core Infrastructure"
-									description="Core infrastructure development and integrations."
+									title="Infrastructure"
+									description="Core infrastructure projects and developments."
 									variant="dark"
 								>
 									<ul class="mt-4 space-y-3">
+										<li class="flex items-center gap-3">
+											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
+											<span class="text-base text-white/80">Kibisis Mobile Launch</span>
+										</li>
 										<li class="flex items-center gap-3">
 											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
 											<span class="text-base text-white/80">Voi ID Prototype</span>
@@ -275,16 +229,24 @@
 										</li>
 									</ul>
 									<div class="mt-6 flex items-center justify-end">
-										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Voi ID</span>
+										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Projects</span>
 									</div>
 								</InfoTile>
 
 								<InfoTile
 									title="Community Events"
-									description="Community engagement and gaming events."
-									variant="dark"
+										description="Community rewards and incentives."
+										variant="dark"
 								>
 									<ul class="mt-4 space-y-3">
+										<li class="flex items-center gap-3">
+											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
+											<span class="text-base text-white/80">NFT Rewards</span>
+										</li>
+										<li class="flex items-center gap-3">
+											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
+											<span class="text-base text-white/80">DeFi Rewards</span>
+										</li>
 										<li class="flex items-center gap-3">
 											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
 											<span class="text-base text-white/80">NFT Games Launch</span>
@@ -296,30 +258,6 @@
 									</ul>
 									<div class="mt-6 flex items-center justify-end">
 										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Events</span>
-									</div>
-								</InfoTile>
-
-								<InfoTile
-									title="Ecosystem Tokens"
-									description="Token launches and integrations."
-									variant="dark"
-								>
-									<ul class="mt-4 space-y-3">
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">enVoi Token Launch</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">Kibisis Token</span>
-										</li>
-										<li class="flex items-center gap-3">
-											<div class="h-1.5 w-1.5 rounded-full bg-purple-400/60"></div>
-											<span class="text-base text-white/80">Nautilus Token</span>
-										</li>
-									</ul>
-									<div class="mt-6 flex items-center justify-end">
-										<span class="rounded-full border border-purple-400/20 bg-purple-400/10 px-3 py-1 text-sm text-purple-200">Tokens</span>
 									</div>
 								</InfoTile>
 							</div>
