@@ -23,9 +23,9 @@
 			color: 'blue',
 			description: 'Implements policies and manages ecosystem resources.',
 			features: [
-				'Elected and appointed members',
-				'Implements policies and decisions',
-				'Aligns operations with community values'
+				'The community\'s treasury',
+				'Ensures legal and regulatory compliance',
+				'Aligns with community values'
 			],
 			link: 'https://docs.voi.network/governance/governance/treasury/'
 		},
