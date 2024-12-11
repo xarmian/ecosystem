@@ -5,7 +5,7 @@
 </script>
 
 <div class="rounded-xl border border-white/10 bg-white/5 p-6">
-	<div class="mb-6">
+	<div class="mb-6 flex items-center justify-between">
 		<h2 class="flex items-center gap-3 text-xl">
 			{#if icon}
 				{@html icon}
@@ -15,6 +15,9 @@
 			{/if}
 			{title}
 		</h2>
+		{#if $$slots.button}
+			<slot name="button" />
+		{/if}
 	</div>
 	<slot />
 </div> 
