@@ -98,7 +98,7 @@
             </svg>`,
 			subSections: {
 				socials: { title: 'Socials', description: 'Follow the latest' },
-				events: { title: 'Events', description: 'Spaces & Meetings' },
+				events: { title: 'Events', description: 'Spaces & Meetings' }
 			}
 		},
 		governance: {
