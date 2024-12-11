@@ -266,7 +266,7 @@ export const projects: Project[] = [
         id: 31,
         title: "Funk's Ultimate Node Controller",
         type: 'Infrastructure',
-        description: 'FUNC is a Cross-platform Service that makes it easy to spin up a node for Algorand or Voi and start participating in consensus.',
+        description: 'FUNC is a Cross-platform Service that makes it easy to spin up a node for Voi or Algorand and start participating in consensus.',
         logo: `${BASE_LOGO_URL}/logos/func.png`,
         twitter: null,
         status: 'active',

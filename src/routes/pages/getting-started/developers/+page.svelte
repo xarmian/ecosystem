@@ -127,7 +127,7 @@
 						<LinkButton
 							href="https://github.com/algorand/pyteal"
 							label="PyTeal"
-							description="Python library for Algorand smart contracts"
+							description="Python library for AVM smart contracts"
 							external={true}
 						/>
 						<LinkButton
