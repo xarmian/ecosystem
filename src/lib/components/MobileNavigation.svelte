@@ -9,7 +9,7 @@
 	export let handleSectionHover: (key: string, isEntering: boolean) => void;
 </script>
 
-<div class="md:hidden">
+<div class="mobile-navigation md:hidden">
 	<!-- Mobile Header -->
 	<div class="mb-8 pt-20 text-center">
 		<img src="/voi-logo.svg" alt="Voi Logo" class="mx-auto mb-4 h-16" />

@@ -27,7 +27,13 @@
 	function handleClickOutside(event: MouseEvent) {
 		if (activeSection && event.target instanceof Element) {
 			const modal = document.querySelector('.expanded-content');
-			if (modal && !modal.contains(event.target) && !event.target.closest('.section-button')) {
+			const mobileNav = document.querySelector('.mobile-navigation');
+			if (
+				modal &&
+				!modal.contains(event.target) &&
+				!event.target.closest('.section-button') &&
+				(!mobileNav || !mobileNav.contains(event.target))
+			) {
 				activeSection = null;
 			}
 		}
@@ -152,7 +158,7 @@
 
 <div
 	class="relative min-h-screen overflow-hidden bg-voi-dark text-white"
-	on:click={handleClickOutside}
+	on:click|self={handleClickOutside}
 >
 	<!-- Background Effects -->
 	<div class="absolute inset-0 overflow-hidden">
