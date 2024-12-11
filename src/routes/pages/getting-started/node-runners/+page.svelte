@@ -85,8 +85,8 @@
 				</InfoTile>
 
 				<InfoTile
-					title="Windows"
-					description="Community solutions for Windows systems:"
+					title="Windows or Mac"
+					description="Community solutions for Windows and Mac systems:"
 					variant="dark"
 				>
 					<div class="mt-4 space-y-3">
@@ -111,7 +111,7 @@
 		<Section title="Get Tokens" icon={tokenIcon} number={3}>
 			<div class="grid gap-6 sm:grid-cols-2">
 				<ActionTile
-					title="Quick Start (Fountain)"
+					title="Fountain"
 					description="Get a small amount of tokens from the community fountain to get your node online quickly."
 					href="https://fountain.voirewards.com/"
 					external={true}
