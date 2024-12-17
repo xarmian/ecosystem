@@ -73,17 +73,28 @@
 
 		<!-- Current Proposals -->
 		<Section title="Active Proposals">
-			<a
-				href="https://discord.com/channels/1055863853633785857/1146406541084348426"
-				target="_blank"
-				class="inline-flex items-center rounded-lg border border-white/10 bg-[#1a0b2e]/80 px-4 py-2 text-sm text-purple-200 transition-all hover:border-white/20 hover:bg-[#1a0b2e]"
-				slot="button"
-			>
-				View All Proposals
-				<svg class="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-					<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-			</a>
+			<div class="flex gap-2" slot="button">
+				<a
+					href="https://discord.com/channels/1055863853633785857/1146406541084348426"
+					target="_blank"
+					class="inline-flex items-center rounded-lg border border-white/10 bg-[#1a0b2e]/80 px-4 py-2 text-sm text-purple-200 transition-all hover:border-white/20 hover:bg-[#1a0b2e]"
+				>
+					View All Proposals
+					<svg class="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+				</a>
+				<a
+					href="https://sites.google.com/view/voigovernance/home"
+					target="_blank"
+					class="inline-flex items-center rounded-lg border border-white/10 bg-[#1a0b2e]/80 px-4 py-2 text-sm text-purple-200 transition-all hover:border-white/20 hover:bg-[#1a0b2e]"
+				>
+					Proposal Tracker
+					<svg class="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+				</a>
+			</div>
 
 			<!-- Coming Soon Banner -->
 			<div class="rounded-xl border border-purple-400/20 bg-gradient-to-br from-purple-400/10 to-transparent p-6">
