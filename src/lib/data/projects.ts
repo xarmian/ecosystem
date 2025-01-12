@@ -204,7 +204,7 @@ export const projects: Project[] = [
         logo: `${BASE_LOGO_URL}/logos/voi_logo.png`,
         twitter: null,
         status: 'active',
-        url: 'https://staking.voi.network',
+        url: 'https://voix.nautilus.sh',
         new: true
     },
     {
